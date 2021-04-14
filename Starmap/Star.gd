@@ -13,8 +13,9 @@ func _ready():
 
 func set_label() -> void:
 	var text = [
-		self.name,
+		#self.name,
 		"%02d-%02d" % [sector.x, sector.y],
+		"(%d, %d)" % [position.x, position.y]
 	]
 	if closest_neighbor:
 		text.append(closest_neighbor.name)
