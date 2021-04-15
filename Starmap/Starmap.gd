@@ -10,7 +10,7 @@ onready var StarlanesFolder = $StarlanesFolder
 var init_seed := 0
 var map_size := Vector2(10, 10) # measured in sectors
 var map := [] # becomes 2D array
-var star_density := 0.1 # probability for a star in a sector
+var star_density := 0.15 # ratio of sectors who have a star
 var sector_size := 50 # in pixels
 var sector_padding := 3 # dont place stars closer than # px to sector border
 var amount_of_stars := 0 # gets counted during map creation
@@ -33,23 +33,29 @@ func init_map() -> void:
 			map[x].append(null)
 	
 	# instance and place stars
-	for x in range(map_size.x):
-		for y in range(map_size.y):
-			if randf() > star_density:
-				continue
-			var star = Star.instance()
-			star.sector = Vector2(x, y)
-			var star_offset = Vector2(
-				int(rand_range(sector_padding + 8, sector_size - sector_padding - 8)),
-				int(rand_range(sector_padding + 8, sector_size - sector_padding - 8))
-			) # the 8 is half the tilesize of the sun-icon
-			star.position = Vector2(x * sector_size, y * sector_size) + star_offset
-			star.name = star.generate_name()
-			map[x][y] = star
-			StarsFolder.add_child(star)
-	amount_of_stars = StarsFolder.get_child_count()
+	for i in int(map_size.x * map_size.y * star_density):
+		while true:
+			var temp_x = randi() % int(map_size.x)
+			var temp_y = randi() % int(map_size.y)
+			if map[temp_x][temp_y]: continue
+			instance_star(temp_x, temp_y)
+			break
 	
+	amount_of_stars = StarsFolder.get_child_count()
 	place_starlanes()
+
+
+func instance_star(x: int, y: int) -> void:
+	var star = Star.instance()
+	star.sector = Vector2(x, y)
+	var star_offset = Vector2(
+		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8)),
+		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8))
+	) # the 8 is half the tilesize of the sun-icon
+	star.position = Vector2(x * sector_size, y * sector_size) + star_offset
+	star.name = star.generate_name()
+	map[x][y] = star
+	StarsFolder.add_child(star)
 
 
 func place_starlanes() -> void:
@@ -73,6 +79,9 @@ func place_starlanes() -> void:
 		var s = undone_stars.find(candidate_end)
 		done_stars.append(undone_stars[s])
 		undone_stars.remove(s)
+	
+	# add random lanes, check for intersections
+
 
 
 func create_starlane(s1: Star, s2: Star) -> void:
