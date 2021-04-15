@@ -3,6 +3,9 @@ extends Node2D
 
 var Star = preload("res://Starmap/Star.tscn")
 onready var StarsFolder = $StarsFolder
+var Starlane = preload("res://Starmap/Starlane.tscn")
+onready var StarlanesFolder = $StarlanesFolder
+
 
 var init_seed := 0
 var map_size := Vector2(10, 10) # measured in sectors
@@ -11,7 +14,6 @@ var star_density := 0.1 # probability for a star in a sector
 var sector_size := 50 # in pixels
 var sector_padding := 3 # dont place stars closer than # px to sector border
 var amount_of_stars := 0 # gets counted during map creation
-var starlanes := []
 
 
 func _ready() -> void:
@@ -36,25 +38,26 @@ func init_map() -> void:
 			if randf() > star_density:
 				continue
 			var star = Star.instance()
-			star.name = "Star_%02d-%02d" % [x, y]
 			star.sector = Vector2(x, y)
 			var star_offset = Vector2(
 				int(rand_range(sector_padding + 8, sector_size - sector_padding - 8)),
 				int(rand_range(sector_padding + 8, sector_size - sector_padding - 8))
 			) # the 8 is half the tilesize of the sun-icon
 			star.position = Vector2(x * sector_size, y * sector_size) + star_offset
+			star.name = star.generate_name()
 			map[x][y] = star
 			StarsFolder.add_child(star)
-			star.set_label()
 	amount_of_stars = StarsFolder.get_child_count()
-	create_starlanes()
+	
+	place_starlanes()
 
 
-func create_starlanes() -> void:
+func place_starlanes() -> void:
 	var undone_stars:Array = StarsFolder.get_children()
 	var done_stars := []
 	done_stars.append(undone_stars.pop_front())
-			
+	
+	# first pass with Minimum Spanning Tree; all stars connected
 	while !undone_stars.empty():
 		var best_distance = INF
 		var candidate_start = null
@@ -66,10 +69,18 @@ func create_starlanes() -> void:
 					best_distance = current_distance
 					candidate_start = s1
 					candidate_end = s2
-		starlanes.append([candidate_start.position, candidate_end.position])
+		create_starlane(candidate_start, candidate_end)
 		var s = undone_stars.find(candidate_end)
 		done_stars.append(undone_stars[s])
 		undone_stars.remove(s)
+
+
+func create_starlane(s1: Star, s2: Star) -> void:
+	var lane = Starlane.instance()
+	lane.init(s1, s2)
+	StarlanesFolder.add_child(lane)
+	s1.lanes.append(lane)
+	s2.lanes.append(lane)
 
 
 func _draw() -> void:
@@ -80,14 +91,10 @@ func _draw() -> void:
 	# draw sector grid
 	for x in range(map_size.x):
 		for y in range(map_size.y):
-			#continue
+			continue
 			draw_rect(
 				Rect2(Vector2(x * sector_size, y * sector_size), Vector2(sector_size, sector_size)),
 				Color(.25, .25, .25), false, 1.0)
-	
-	# draw starlanes
-	for i in starlanes:
-		draw_line(i[0], i[1], Color(.8, .8, .8), 1.1, true)
 
 
 func draw_bg_stars(amount: int, max_saturation: float, min_value: float, size: float, alpha: float) -> void:

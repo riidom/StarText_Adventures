@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Star",
 "language": "GDScript",
 "path": "res://Starmap/Star.gd"
+}, {
+"base": "Line2D",
+"class": "Starlane",
+"language": "GDScript",
+"path": "res://Starmap/Starlane.gd"
 } ]
 _global_script_class_icons={
-"Star": ""
+"Star": "",
+"Starlane": ""
 }
 
 [application]

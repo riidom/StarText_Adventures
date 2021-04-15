@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Starmap/Starlane.gd" type="Script" id=1]
+
+[node name="Starlane" type="Line2D"]
+width = 0.5
+default_color = Color( 1, 1, 1, 0.627451 )
+antialiased = true
+script = ExtResource( 1 )
