@@ -21,7 +21,7 @@ func _ready():
 
 func set_label() -> void:
 	var text = [
-		"** " + self.name + " **",
+		self.name,
 		"",
 		"Sector: %02d-%02d" % [sector.x, sector.y],
 		"Pixelpos: %d, %d" % [position.x, position.y],
@@ -29,8 +29,8 @@ func set_label() -> void:
 	]
 	for l in lanes:
 		text.append("-> " + l.get_other_side(self).name)
-	
 	Infotext.text = PoolStringArray(text).join("\n")
+
 
 func generate_name() -> String:
 	var num = "-%02d%02d" % [sector.x, sector.y]

@@ -12,7 +12,7 @@ func init(s1, s2) -> void:
 	name = star_1.name + "__" + star_2.name
 	add_point(star_1.position)
 	add_point(star_2.position)
-	
+
 
 func get_other_side(star: Star) -> Star:
 	if star != star_1 and star != star_2:
@@ -23,3 +23,4 @@ func get_other_side(star: Star) -> Star:
 		return star_2
 	else:
 		return star_1
+
