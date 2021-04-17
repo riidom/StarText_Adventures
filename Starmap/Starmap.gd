@@ -3,28 +3,31 @@ extends Node2D
 
 var Star = preload("res://Starmap/Star.tscn")
 onready var StarsFolder = $StarsFolder
+
 var Starlane = preload("res://Starmap/Starlane.tscn")
 onready var StarlanesFolder = $StarlanesFolder
 
-
 var init_seed := 0
-var map_size := Vector2(10, 10) # measured in sectors
 var map := [] # becomes 2D array
 var star_density := 0.15 # ratio of sectors who have a star
-var sector_size := 50 # in pixels
-var sector_padding := 3 # dont place stars closer than # px to sector border
 var amount_of_stars := 0 # gets counted during map creation
 
-var debug_points := []
+var map_size := Vector2(10, 10) # measured in sectors
+var sector_size := 35 # in pixels
+var sector_padding := round(sector_size / 15.0) # dont place stars closer than # px to sector border
+var map_px_size := map_size.x * sector_size
+
 
 func _ready() -> void:
 	randomize()
 	# 363574
 	# 872921
-	init_seed = randi()%1000000
+	init_seed = randi()# % 1000000
 	print("Seed: %s" % init_seed)
 	seed(init_seed)
-	$ColorRect.rect_size = get_viewport().size
+	map_px_size = min(get_viewport_rect().size.x, get_viewport_rect().size.y) * 0.8
+	$ColorRect.rect_size = Vector2(map_px_size, map_px_size)
+	
 	init_map()
 
 
@@ -51,6 +54,7 @@ func init_map() -> void:
 func instance_star(x: int, y: int) -> void:
 	var star = Star.instance()
 	star.sector = Vector2(x, y)
+	star.set_px_size(round(sector_size / 3.0))
 	var star_offset = Vector2(
 		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8)),
 		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8))
@@ -151,8 +155,8 @@ func create_starlane(s1: Star, s2: Star) -> void:
 
 func _draw() -> void:
 	# draw background stars
-	draw_bg_stars(350, .25, .25, 1, .5) # small stars
-	draw_bg_stars(50, .1, .75, 2, .75) # big stars
+	draw_bg_stars(map_px_size / 2, .25, .25, 1, .5) # small stars
+	draw_bg_stars(map_px_size / 10, .1, .75, 2, .75) # big stars
 	
 	# draw sector grid
 	for x in range(map_size.x):
@@ -161,17 +165,14 @@ func _draw() -> void:
 			draw_rect(
 				Rect2(Vector2(x * sector_size, y * sector_size), Vector2(sector_size, sector_size)),
 				Color(.25, .25, .25), false, 1.0)
-	
-	for d in debug_points:
-		draw_circle(d, 3, Color(1, 0, 0))
 
 
-func draw_bg_stars(amount: int, max_saturation: float, min_value: float, size: float, alpha: float) -> void:
+func draw_bg_stars(amount: float, max_saturation: float, min_value: float, size: float, alpha: float) -> void:
 	var bg_star_pos = Vector2.ZERO
 	var bg_star_col = Color(0,0,0, 1)
-	for _i in range(amount):
-		bg_star_pos.x = round(rand_range(0, get_viewport().size.x))
-		bg_star_pos.y = round(rand_range(0, get_viewport().size.y))
+	for _i in range(int(amount)):
+		bg_star_pos.x = round(rand_range(0, map_px_size))
+		bg_star_pos.y = round(rand_range(0, map_px_size))
 		bg_star_col = Color.from_hsv(randf(), rand_range(0, max_saturation), rand_range(min_value, 1), alpha)
 		draw_circle(bg_star_pos, size, bg_star_col)
 
@@ -184,3 +185,14 @@ func _input(event: InputEvent) -> void:
 func recreate_map() -> void:
 	var _x = get_tree().reload_current_scene()
 
+
+func get_size() -> float:
+	return map_px_size
+
+
+func _on_ColorRect_resized() -> void:
+	map_px_size = min(get_viewport_rect().size.x, get_viewport_rect().size.y) * 0.8
+	$ColorRect.rect_size = Vector2(map_px_size, map_px_size)
+	sector_size = int(map_px_size / map_size.x) # in pixels
+	prints(map_px_size, sector_size)
+	sector_padding = round(sector_size / 15.0)

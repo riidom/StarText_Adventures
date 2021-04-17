@@ -27,6 +27,7 @@ margin_left = -7.75
 margin_top = -7.5
 margin_right = 8.25
 margin_bottom = 8.5
+rect_pivot_offset = Vector2( 8, 8 )
 mouse_default_cursor_shape = 3
 texture = ExtResource( 2 )
 __meta__ = {

@@ -18,6 +18,10 @@ onready var Infotext = $Z_Index/Infotext
 func _ready():
 	Infotext.visible = false
 
+	
+func set_px_size(size: float) -> void:
+	$Icon.rect_scale = Vector2(size / 16, size / 16)
+
 
 func set_label() -> void:
 	var text = [
