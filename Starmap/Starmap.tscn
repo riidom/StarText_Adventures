@@ -30,4 +30,6 @@ margin_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="PlayerIndicator" type="Sprite" parent="."]
 [connection signal="resized" from="ColorRect" to="." method="_on_ColorRect_resized"]

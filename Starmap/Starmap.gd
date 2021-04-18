@@ -17,6 +17,10 @@ var sector_size := 35 # in pixels
 var sector_padding := round(sector_size / 15.0) # dont place stars closer than # px to sector border
 var map_px_size := map_size.x * sector_size
 
+onready var PlayerIndicator = $PlayerIndicator
+var player_on_star_icon = preload("res://Starmap/player_indicator_star.png")
+var player_on_lane_icon = preload("res://Starmap/player_indicator_lane.png")
+
 
 func _ready() -> void:
 	randomize()
@@ -27,7 +31,6 @@ func _ready() -> void:
 	seed(init_seed)
 	map_px_size = min(get_viewport_rect().size.x, get_viewport_rect().size.y) * 0.8
 	$ColorRect.rect_size = Vector2(map_px_size, map_px_size)
-	
 	init_map()
 
 
@@ -194,5 +197,13 @@ func _on_ColorRect_resized() -> void:
 	map_px_size = min(get_viewport_rect().size.x, get_viewport_rect().size.y) * 0.8
 	$ColorRect.rect_size = Vector2(map_px_size, map_px_size)
 	sector_size = int(map_px_size / map_size.x) # in pixels
-	prints(map_px_size, sector_size)
 	sector_padding = round(sector_size / 15.0)
+
+
+func on_player_location_updated(location):
+	PlayerIndicator.position = location.position
+	if location.get_class() == "Star":
+		PlayerIndicator.texture = player_on_star_icon
+	elif location.get_class() == "Starlane":
+		PlayerIndicator.texture = player_on_lane_icon
+		
