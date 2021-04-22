@@ -1,6 +1,6 @@
 extends Node2D
 class_name Star
-func get_class() -> String: return "Star"
+func get_class(): return "Star"
 
 
 enum {V, C, SC} # for generate_names(): vowel, consonant, support-consonant

@@ -1,6 +1,6 @@
 extends Line2D
 class_name Starlane
-func get_class() -> String:	return "Starlane"
+func get_class(): return "Starlane"
 
 
 var star_1: Star = null
