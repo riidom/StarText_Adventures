@@ -29,6 +29,10 @@ _global_script_class_icons={
 config/name="StarText_Adventures"
 run/main_scene="res://Main/__GAME__.tscn"
 
+[autoload]
+
+NameGen="*res://Globals/NameGen.gd"
+
 [display]
 
 window/size/width=960

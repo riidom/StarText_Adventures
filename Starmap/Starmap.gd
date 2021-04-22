@@ -63,7 +63,7 @@ func instance_star(x: int, y: int) -> void:
 		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8))
 	) # the 8 is half the tilesize of the sun-icon
 	star.position = Vector2(x * sector_size, y * sector_size) + star_offset
-	star.name = star.generate_name()
+	star.name = NameGen.generate_system_name(x, y)
 	map[x][y] = star
 	StarsFolder.add_child(star)
 	star.set_label()
@@ -186,6 +186,7 @@ func _input(event: InputEvent) -> void:
 
 
 func recreate_map() -> void:
+	NameGen.used = {}
 	var _x = get_tree().reload_current_scene()
 
 
