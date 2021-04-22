@@ -3,9 +3,19 @@
 [ext_resource path="res://Starmap/Starmap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/SpaceGrotesk-Bold_16px.tres" type="DynamicFont" id=2]
 [ext_resource path="res://UI/SpaceGrotesk-Normal_16px.tres" type="DynamicFont" id=3]
-[ext_resource path="res://Main/StarMapContainer.gd" type="Script" id=4]
 [ext_resource path="res://Player/Player.gd" type="Script" id=5]
 [ext_resource path="res://Main/__GAME__.gd" type="Script" id=6]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Container
+
+
+onready var StarMap = $Starmap
+
+
+func _ready() -> void:
+	rect_size = Vector2(StarMap.get_size(), StarMap.get_size())
+"
 
 [node name="__GAME__" type="Control"]
 anchor_right = 1.0
@@ -50,7 +60,7 @@ __meta__ = {
 margin_right = 410.0
 margin_bottom = 472.0
 rect_min_size = Vector2( 410, 410 )
-script = ExtResource( 4 )
+script = SubResource( 1 )
 
 [node name="Starmap" parent="MainUI/HBoxContainer/StarMapContainer" instance=ExtResource( 1 )]
 
