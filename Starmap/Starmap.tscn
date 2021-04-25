@@ -32,4 +32,3 @@ __meta__ = {
 }
 
 [node name="PlayerIndicator" type="Sprite" parent="."]
-[connection signal="resized" from="ColorRect" to="." method="_on_ColorRect_resized"]

@@ -1,11 +1,11 @@
 extends Control
 
 
-onready var Starmap = $MainUI/HBoxContainer/StarMapContainer/Starmap
+onready var Starmap = $MainUI/HBox/Map_Status/StarMapContainer/Starmap
 
-onready var StarsFolder = $MainUI/HBoxContainer/StarMapContainer/Starmap/StarsFolder
+onready var StarsFolder = $MainUI/HBox/Map_Status/StarMapContainer/Starmap/StarsFolder
 var StarsArray := []
-onready var StarlanesFolder = $MainUI/HBoxContainer/StarMapContainer/Starmap/StarlanesFolder
+onready var StarlanesFolder = $MainUI/HBox/Map_Status/StarMapContainer/Starmap/StarlanesFolder
 var StarlanesArray := []
 
 onready var Player = $Player

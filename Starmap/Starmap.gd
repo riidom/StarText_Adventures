@@ -13,7 +13,7 @@ var star_density := 0.15 # ratio of sectors who have a star
 var amount_of_stars := 0 # gets counted during map creation
 
 var map_size := Vector2(10, 10) # measured in sectors
-var sector_size := 35 # in pixels
+var sector_size := 40 # in pixels
 var sector_padding := round(sector_size / 15.0) # dont place stars closer than # px to sector border
 var map_px_size := map_size.x * sector_size
 
@@ -29,8 +29,6 @@ func _ready() -> void:
 	init_seed = randi()# % 1000000
 	print("Seed: %s" % init_seed)
 	seed(init_seed)
-	map_px_size = min(get_viewport_rect().size.x, get_viewport_rect().size.y) * 0.8
-	$ColorRect.rect_size = Vector2(map_px_size, map_px_size)
 	init_map()
 
 
@@ -192,13 +190,6 @@ func recreate_map() -> void:
 
 func get_size() -> float:
 	return map_px_size
-
-
-func _on_ColorRect_resized() -> void:
-	map_px_size = min(get_viewport_rect().size.x, get_viewport_rect().size.y) * 0.8
-	$ColorRect.rect_size = Vector2(map_px_size, map_px_size)
-	sector_size = int(map_px_size / map_size.x) # in pixels
-	sector_padding = round(sector_size / 15.0)
 
 
 func on_player_location_updated(location):
