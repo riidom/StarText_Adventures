@@ -50,5 +50,6 @@ text = "00:00"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+[connection signal="gui_input" from="Icon" to="." method="_on_Icon_gui_input"]
 [connection signal="mouse_entered" from="Icon" to="." method="_on_Icon_mouse_entered"]
 [connection signal="mouse_exited" from="Icon" to="." method="_on_Icon_mouse_exited"]

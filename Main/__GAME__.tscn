@@ -1,13 +1,18 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Starmap/Starmap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/SpaceGrotesk-Bold_16px.tres" type="DynamicFont" id=2]
 [ext_resource path="res://UI/SpaceGrotesk-Normal_16px.tres" type="DynamicFont" id=3]
-[ext_resource path="res://Main/TextLeft.gd" type="Script" id=4]
+[ext_resource path="res://UI/TextLeft.gd" type="Script" id=4]
 [ext_resource path="res://Player/Player.gd" type="Script" id=5]
 [ext_resource path="res://Main/__GAME__.gd" type="Script" id=6]
+[ext_resource path="res://UI/Statuszeile.gd" type="Script" id=7]
+[ext_resource path="res://UI/TextRight.gd" type="Script" id=8]
+[ext_resource path="res://UI/Stylebox_Statuszeile.tres" type="StyleBox" id=9]
+[ext_resource path="res://UI/Hinweiszeile.gd" type="Script" id=10]
+[ext_resource path="res://UI/SpaceGrotesk-Light_24px.tres" type="DynamicFont" id=11]
 
-[sub_resource type="GDScript" id=2]
+[sub_resource type="GDScript" id=1]
 script/source = "extends HBoxContainer
 
 onready var StarMap = $Map_Status/StarMapContainer/Starmap
@@ -17,7 +22,6 @@ func _ready() -> void:
 	$Map_Status.rect_size = Vector2(int(StarMap.get_size() + 20), int(StarMap.get_size() + 20))
 	$TextLeft.rect_size.x = int((rect_size.x - $Map_Status.rect_size.x) / 2)
 	$TextRight.rect_size.x = int((rect_size.x - $Map_Status.rect_size.x) / 2)
-	prints(rect_size.x, $Map_Status.rect_size.x, $TextLeft.rect_size.x, $TextRight.rect_size.x)
 "
 
 [node name="__GAME__" type="Control"]
@@ -58,7 +62,7 @@ grow_horizontal = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/separation = 10
-script = SubResource( 2 )
+script = SubResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -70,43 +74,69 @@ size_flags_horizontal = 3
 
 [node name="Statuszeile" type="MarginContainer" parent="MainUI/HBox/Map_Status"]
 margin_right = 410.0
-margin_bottom = 34.0
+margin_bottom = 51.0
 grow_horizontal = 2
 grow_vertical = 2
 custom_constants/margin_top = 10
 custom_constants/margin_bottom = 10
+script = ExtResource( 7 )
 
 [node name="HBox3" type="HBoxContainer" parent="MainUI/HBox/Map_Status/Statuszeile"]
 margin_top = 10.0
 margin_right = 410.0
-margin_bottom = 24.0
+margin_bottom = 41.0
 custom_constants/separation = 10
 
 [node name="Label" type="Label" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
-margin_right = 39.0
-margin_bottom = 14.0
+margin_right = 64.0
+margin_bottom = 31.0
+custom_styles/normal = ExtResource( 9 )
+custom_fonts/font = ExtResource( 3 )
 text = "LABEL"
 
 [node name="Label2" type="Label" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
-margin_left = 49.0
-margin_right = 111.0
-margin_bottom = 14.0
-text = "INFOTEXT"
+margin_left = 74.0
+margin_right = 203.0
+margin_bottom = 31.0
+custom_styles/normal = ExtResource( 9 )
+custom_fonts/font = ExtResource( 3 )
+text = "No destination"
 
 [node name="Label3" type="Label" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
-margin_left = 121.0
-margin_right = 212.0
-margin_bottom = 14.0
-text = "VOLLWICHTIG"
+margin_left = 213.0
+margin_right = 256.0
+margin_bottom = 31.0
+custom_styles/normal = ExtResource( 9 )
+custom_fonts/font = ExtResource( 3 )
+text = "???"
 
 [node name="StarMapContainer" type="CenterContainer" parent="MainUI/HBox/Map_Status"]
-margin_top = 38.0
+margin_top = 55.0
 margin_right = 410.0
-margin_bottom = 448.0
+margin_bottom = 465.0
 rect_min_size = Vector2( 410, 410 )
 size_flags_horizontal = 3
 
 [node name="Starmap" parent="MainUI/HBox/Map_Status/StarMapContainer" instance=ExtResource( 1 )]
+
+[node name="Hinweiszeile" type="MarginContainer" parent="MainUI/HBox/Map_Status"]
+margin_top = 469.0
+margin_right = 410.0
+margin_bottom = 521.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script = ExtResource( 10 )
+
+[node name="Label" type="Label" parent="MainUI/HBox/Map_Status/Hinweiszeile"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 400.0
+margin_bottom = 42.0
+custom_fonts/font = ExtResource( 11 )
+custom_colors/font_color = Color( 0.733333, 0.2, 0.2, 1 )
+autowrap = true
 
 [node name="TextLeft" type="ColorRect" parent="MainUI/HBox"]
 margin_left = 420.0
@@ -151,8 +181,6 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
-text = "Text test Text test Text test Text test Text test Text test Text test Text test Text test Text test Text test Text test Text test Text test "
-fit_content_height = true
 scroll_following = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -165,6 +193,7 @@ margin_bottom = 574.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0.133333, 0.133333, 0.133333, 1 )
+script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -191,7 +220,6 @@ rect_min_size = Vector2( 200, 0 )
 size_flags_vertical = 3
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
-text = "Anderer Labertext Anderer Labertext Anderer Labertext Anderer Labertext Anderer Labertext Anderer Labertext"
 fit_content_height = true
 __meta__ = {
 "_edit_use_anchors_": false

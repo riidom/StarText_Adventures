@@ -9,6 +9,8 @@ var lanes := [] # starlanes connecting to this star
 onready var Infotext = $Z_Index/Infotext
 
 
+
+
 func _ready():
 	Infotext.visible = false
 
@@ -37,3 +39,8 @@ func _on_Icon_mouse_entered() -> void:
 
 func _on_Icon_mouse_exited() -> void:
 	Infotext.visible = false
+
+
+func _on_Icon_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed:
+		G.emit_signal("star_clicked", self)

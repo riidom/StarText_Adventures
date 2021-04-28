@@ -24,8 +24,7 @@ var player_on_lane_icon = preload("res://Starmap/player_indicator_lane.png")
 
 func _ready() -> void:
 	randomize()
-	# 363574
-	# 872921
+	# 113798264
 	init_seed = randi()# % 1000000
 	print("Seed: %s" % init_seed)
 	seed(init_seed)
@@ -90,6 +89,7 @@ func place_starlanes() -> void:
 		undone_stars.remove(s)
 	
 	# add random lanes, check for intersections and narrow angles
+	done_stars.shuffle()
 	for s1 in done_stars:
 		for s2 in done_stars:
 			if s1 == s2: continue
@@ -100,7 +100,7 @@ func place_starlanes() -> void:
 			if t: continue # such a starlane already existing?
 			if is_intersecting(s1, s2, starlanes): continue
 			if is_touching_star(s1, s2, done_stars): continue
-			if are_angles_narrow(s1, s2, 30): continue
+			if are_angles_narrow(s1, s2, 25): continue
 			create_starlane(s1, s2)
 
 
@@ -192,10 +192,10 @@ func get_size() -> float:
 	return map_px_size
 
 
-func on_player_location_updated(location):
-	PlayerIndicator.position = location.position
-	if location.get_class() == "Star":
+func _on_player_location_updated(player):
+	PlayerIndicator.position = player.location.position
+	if player.location.get_class() == "Star":
 		PlayerIndicator.texture = player_on_star_icon
-	elif location.get_class() == "Starlane":
+	elif player.location.get_class() == "Starlane":
 		PlayerIndicator.texture = player_on_lane_icon
-		
+	
