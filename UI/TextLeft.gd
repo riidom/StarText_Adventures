@@ -13,21 +13,21 @@ func print_location(player: Player) -> void:
 	if player.location.get_class() == "Star":
 		add("You are now in the system %s, " % player.location.name, 0)
 		if player.status == G.IN_STATION:
-			add("inside the station.")
+			add("inside the station.", 2)
 			
 		elif player.status == G.IN_SPACE:
 			if player.came_from == G.FROM_STARLANE:
-				add("after leaving the starlane, the station is nearby.")
+				add("after leaving the starlane, the station is nearby.", 2)
 				
 			elif player.came_from == G.FROM_STATION:
-				add("outside the station in space.")
+				add("outside the station in space.", 2)
 				
 			else: err("player.came_from")
 				
 		else: err("player.status")
 			
 	elif player.location.get_class() == "Starlane":
-		add("You are now on the starlane between %s and %s." % [player.location.star_1, player.location.star_2])
+		add("You are now on the starlane between %s and %s." % [player.location.star_1, player.location.star_2], 2)
 		
 	else: err("player.location")
 
@@ -48,3 +48,10 @@ func err(variable: String) -> void:
 func _on_player_location_updated(player: Player) -> void:
 	print_location(player)
 
+
+func _on_destination_set(star: Star, silent: bool = false) -> void:
+	if silent: return
+	if star:
+		add("Destination set to %s." % star.name, 2)
+	else:
+		add("Destination cleared.", 2)

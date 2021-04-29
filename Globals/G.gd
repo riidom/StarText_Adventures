@@ -25,4 +25,4 @@ signal player_location_updated(player)
 # warning-ignore:unused_signal
 signal star_clicked(star)
 # warning-ignore:unused_signal
-signal destination_set(star)
+signal destination_set(star, silent)

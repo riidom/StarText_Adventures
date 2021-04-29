@@ -15,5 +15,8 @@ func _on_player_location_updated(player: Player) -> void:
 		S1.text = "Ship is in station"
 
 
-func _on_destination_set(star: Star) -> void:
-	S2.text = "Destination: %s" % star.name
+func _on_destination_set(star: Star, silent: bool = false) -> void:
+	if star:
+		S2.text = "Destination: %s" % star.name
+	else:
+		S2.text = "No destination set"

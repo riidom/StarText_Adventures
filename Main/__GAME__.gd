@@ -32,12 +32,14 @@ func _ready() -> void:
 	
 	G.connect("star_clicked", self, "_on_star_clicked")
 	G.connect("destination_set", Statuszeile, "_on_destination_set")
+	G.connect("destination_set", TextLeft, "_on_destination_set")
 	
 	# set player to random star at beginning
 	Player.status = G.IN_STATION
 	Player.came_from = G.FROM_STATION
 	Player.location = StarsArray[randi() % StarsArray.size()]
 	G.emit_signal("player_location_updated", Player)
+	G.emit_signal("destination_set", null, true)
 
 
 func _process(_delta: float) -> void:
@@ -50,7 +52,8 @@ func _process(_delta: float) -> void:
 			pass
 		
 		if Input.is_action_just_pressed("navigation"):
-			pass
+			Player.modal = G.DOING_NAV
+			TextRight.nav_options()
 			
 	if Player.status == G.IN_STARLANE:
 		
@@ -61,7 +64,7 @@ func _process(_delta: float) -> void:
 		
 		if Input.is_action_just_pressed("navigation"):
 			Player.modal = G.DOING_NAV
-			TextRight.nav_options()
+			TextRight.nav_options(Player)
 		
 		if Input.is_action_just_pressed("exit_station"):
 			pass
@@ -70,7 +73,14 @@ func _process(_delta: float) -> void:
 		if Input.is_action_just_pressed("ui_cancel"):
 			Player.modal = -1
 			TextRight.general_options(Player)
-		
+	
+	if Player.modal == G.DOING_NAV:
+		if Input.is_action_just_pressed("clear"):
+			Player.destination = null
+			G.emit_signal("destination_set", null)
+			Player.modal = -1
+			TextRight.general_options(Player)
+
 
 func _on_star_clicked(star: Star) -> void:
 	if Player.modal != G.DOING_NAV: return
