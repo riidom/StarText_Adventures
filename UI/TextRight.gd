@@ -16,6 +16,7 @@ func general_options(player: Player) -> void:
 		add("E - Fire up the engines and exit the station.", 2)
 	elif player.status == G.IN.STARLANE:
 		add("W - Wait while the travel on the starlane continues.", 2)
+	add("ESC - Main Menu", 2)
 
 
 func nav_options(player: Player) -> void:

@@ -1,16 +1,17 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://Starmap/Starmap.tscn" type="PackedScene" id=1]
-[ext_resource path="res://UI/SpaceGrotesk-Bold_16px.tres" type="DynamicFont" id=2]
-[ext_resource path="res://UI/SpaceGrotesk-Normal_16px.tres" type="DynamicFont" id=3]
+[ext_resource path="res://UI/font_res/SG-Bold_16px.tres" type="DynamicFont" id=2]
+[ext_resource path="res://UI/font_res/SG-Normal_16px.tres" type="DynamicFont" id=3]
 [ext_resource path="res://UI/TextLeft.gd" type="Script" id=4]
 [ext_resource path="res://Player/Player.gd" type="Script" id=5]
 [ext_resource path="res://Main/__GAME__.gd" type="Script" id=6]
 [ext_resource path="res://UI/Statuszeile.gd" type="Script" id=7]
 [ext_resource path="res://UI/TextRight.gd" type="Script" id=8]
-[ext_resource path="res://UI/Stylebox_Statuszeile.tres" type="StyleBox" id=9]
+[ext_resource path="res://UI/stylebox_res/Stylebox_Statuszeile.tres" type="StyleBox" id=9]
 [ext_resource path="res://UI/Hinweiszeile.gd" type="Script" id=10]
-[ext_resource path="res://UI/SpaceGrotesk-Light_24px.tres" type="DynamicFont" id=11]
+[ext_resource path="res://UI/font_res/SG-Light_24px.tres" type="DynamicFont" id=11]
+[ext_resource path="res://UI/MainMenu.tscn" type="PackedScene" id=12]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends HBoxContainer
@@ -227,3 +228,5 @@ __meta__ = {
 
 [node name="Player" type="Node2D" parent="."]
 script = ExtResource( 5 )
+
+[node name="MainMenu" parent="." instance=ExtResource( 12 )]

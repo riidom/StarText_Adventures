@@ -1,5 +1,6 @@
 extends Control
 
+onready var MainMenu = $MainMenu
 
 onready var Starmap = $MainUI/HBox/Map_Status/StarMapContainer/Starmap
 var Star = preload("res://Starmap/Star.tscn")
@@ -23,6 +24,10 @@ func _ready() -> void:
 	for s in StarsFolder.get_children(): StarsArray.append(s)
 	for l in StarlanesFolder.get_children(): StarlanesArray.append(l)
 	
+	G.connect("main_menu_opened", MainMenu, "_on_opened")
+	G.connect("main_menu_closed", MainMenu, "_on_closed")
+	G.connect("main_menu_closed", self, "_on_main_menu_closed")
+	
 	G.connect("player_location_updated", Starmap, "_on_player_location_updated")
 	G.connect("player_location_updated", TextLeft, "_on_player_location_updated")
 	G.connect("player_location_updated", TextRight, "_on_player_location_updated")
@@ -32,6 +37,9 @@ func _ready() -> void:
 	G.connect("destination_set", Starmap, "_on_destination_set")
 	G.connect("destination_set", Statuszeile, "_on_destination_set")
 	G.connect("destination_set", TextLeft, "_on_destination_set")
+	
+	# hide menu
+	MainMenu.rect_position.x = -MainMenu.rect_size.x
 	
 	# set player to random star at beginning
 	Player.location = StarsArray[randi() % StarsArray.size()]
@@ -82,11 +90,20 @@ func _process(_delta: float) -> void:
 			G.emit_signal("player_location_updated", Player)
 			TextRight.general_options(Player)
 			
-	if Player.modal != G.DOING.NO_MODAL:
+	if Player.modal == G.DOING.NO_MODAL:
 		
 		if Input.is_action_just_pressed("ui_cancel"):
+			Player.modal = G.DOING.MAIN_MENU
+			G.emit_signal("main_menu_opened")
+			
+	else:
+		
+		if Input.is_action_just_pressed("ui_cancel"):
+			if Player.modal == G.DOING.NAV:
+				TextRight.general_options(Player)
+			elif Player.modal == G.DOING.MAIN_MENU:
+				G.emit_signal("main_menu_closed")
 			Player.modal = G.DOING.NO_MODAL
-			TextRight.general_options(Player)
 	
 	if Player.modal == G.DOING.NAV:
 		
@@ -111,3 +128,7 @@ func _on_star_clicked(star: Star) -> void:
 				G.emit_signal("destination_set", star)
 				return
 		Hinweiszeile.display_message("Only adjacent stars are valid destinations.")
+
+
+func _on_main_menu_closed() -> void:
+	Player.modal = G.DOING.NO_MODAL

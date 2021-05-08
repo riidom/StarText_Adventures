@@ -10,7 +10,6 @@ func _ready() -> void:
 
 
 func print_location(player: Player) -> void:
-	printt("IN." + G.IN.keys()[player.status], "FROM." + G.FROM.keys()[player.came_from])
 	add("You are ", 0)
 	add(tell_system(player), 0)
 	

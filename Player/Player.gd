@@ -12,3 +12,4 @@ var location = null # Star or Lane
 
 func _ready() -> void:
 	pass
+
