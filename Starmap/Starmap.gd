@@ -20,6 +20,8 @@ var map_px_size := map_size.x * sector_size
 onready var PlayerIndicator = $PlayerIndicator
 var player_on_star_icon = preload("res://Starmap/player_indicator_star.png")
 var player_on_lane_icon = preload("res://Starmap/player_indicator_lane.png")
+onready var DestinationIndicator = $DestinationIndicator
+var destination_icon = preload("res://Starmap/destination_indicator.png")
 
 
 func _ready() -> void:
@@ -192,10 +194,39 @@ func get_size() -> float:
 	return map_px_size
 
 
+func get_starlane_from_stars(s1, s2) -> Starlane:
+	var name_1 := ""
+	var name_2 := ""
+	for l in s1.lanes:
+		if l.get_other_side(s1) == s2:
+			name_1 = "%s__%s" % [s1.name, s2.name]
+			name_2 = "%s__%s" % [s2.name, s1.name]
+	if name_1 == "":
+		printerr("No starlane between %s and %s." % [s1.name, s2.name])
+		print_stack()
+		return null
+	var lane_1 = StarlanesFolder.get_node_or_null(name_1)
+	var lane_2 = StarlanesFolder.get_node_or_null(name_2)
+	if lane_1: return lane_1
+	else: return lane_2
+		
+			
 func _on_player_location_updated(player):
-	PlayerIndicator.position = player.location.position
 	if player.location.get_class() == "Star":
 		PlayerIndicator.texture = player_on_star_icon
+		PlayerIndicator.position = player.location.position
+		PlayerIndicator.rotation = 0
 	elif player.location.get_class() == "Starlane":
 		PlayerIndicator.texture = player_on_lane_icon
+		PlayerIndicator.position = player.location.position
+		var angle = player.location.get_point_position(0).angle()
+		PlayerIndicator.rotation = angle + PI/2
+
+
+func _on_destination_set(star: Star, _silent: bool = false) -> void:
+	if star == null:
+		DestinationIndicator.visible = false
+		return
+	DestinationIndicator.visible = true
+	DestinationIndicator.position = star.position
 	

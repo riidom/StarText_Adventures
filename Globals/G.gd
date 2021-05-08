@@ -2,21 +2,24 @@ extends Node
 
 
 # status
-enum {
-	IN_STATION,
-	IN_SPACE,
-	IN_STARLANE,
+enum IN {
+	STATION,
+	SPACE,
+	STARLANE,
 }
 
 # came_from
-enum {
-	FROM_STATION,
-	FROM_STARLANE,
+enum FROM {
+	GAME_START,
+	STATION,
+	STARLANE,
+	SPACE,
 }
 
 # modal
-enum {
-	DOING_NAV,
+enum DOING {
+	NO_MODAL,
+	NAV,
 }
 
 

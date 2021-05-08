@@ -7,15 +7,15 @@ onready var S3 = $HBox3/Label3
 
 
 func _on_player_location_updated(player: Player) -> void:
-	if player.status == G.IN_SPACE:
+	if player.status == G.IN.SPACE:
 		S1.text = "Ship is in space"
-	elif player.status == G.IN_STARLANE:
+	elif player.status == G.IN.STARLANE:
 		S1.text = "Ship is on starlane"
-	elif player.status == G.IN_STATION:
+	elif player.status == G.IN.STATION:
 		S1.text = "Ship is in station"
 
 
-func _on_destination_set(star: Star, silent: bool = false) -> void:
+func _on_destination_set(star: Star, _silent: bool = false) -> void:
 	if star:
 		S2.text = "Destination: %s" % star.name
 	else:

@@ -6,15 +6,15 @@ onready var Label = $Margin/RichTextLabel
 
 func general_options(player: Player) -> void:
 	cls()
-	if player.status == G.IN_SPACE:
+	if player.status == G.IN.SPACE:
 		add("D - Contact station and ask for permission to dock.", 2)
 		add("N - Navigation computer, pick a destination from map.", 2)
 		if player.destination:
 			add("J - Start the warp engine and enter the starlane.", 2)
-	elif player.status == G.IN_STATION:
+	elif player.status == G.IN.STATION:
 		add("N - Navigation computer, pick a destination from map.", 2)
 		add("E - Fire up the engines and exit the station.", 2)
-	elif player.status == G.IN_STARLANE:
+	elif player.status == G.IN.STARLANE:
 		add("W - Wait while the travel on the starlane continues.", 2)
 
 
