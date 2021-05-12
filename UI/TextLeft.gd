@@ -29,7 +29,7 @@ func print_location(player: Player) -> void:
 	if player.status == G.IN.STARLANE:
 		
 		if player.came_from == G.FROM.STARLANE:
-			add("on the starlane between %s and %s." % [player.location.star_1, player.location.star_2], 2)
+			add("on the starlane between %s and %s." % [player.origin.name, player.destination.name], 2)
 		elif player.came_from == G.FROM.SPACE:
 			add("entering the starlane towards %s." % player.destination.name, 2)
 

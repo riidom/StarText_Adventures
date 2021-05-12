@@ -8,9 +8,6 @@ var Star = preload("res://Starmap/Star.tscn")
 onready var StarsFolder = $MainUI/HBox/Map_Status/StarMapContainer/Starmap/StarsFolder
 var StarsArray := []
 
-onready var StarlanesFolder = $MainUI/HBox/Map_Status/StarMapContainer/Starmap/StarlanesFolder
-var StarlanesArray := []
-
 onready var Statuszeile = $MainUI/HBox/Map_Status/Statuszeile
 onready var Hinweiszeile = $MainUI/HBox/Map_Status/Hinweiszeile
 
@@ -21,12 +18,15 @@ onready var Player = $Player
 
 
 func _ready() -> void:
+	Starmap.custom_ready()
 	for s in StarsFolder.get_children(): StarsArray.append(s)
-	for l in StarlanesFolder.get_children(): StarlanesArray.append(l)
 	
 	G.connect("main_menu_opened", MainMenu, "_on_opened")
 	G.connect("main_menu_closed", MainMenu, "_on_closed")
 	G.connect("main_menu_closed", self, "_on_main_menu_closed")
+	
+	G.connect("game_saved", self, "_on_game_saved")
+	G.connect("game_loaded", self, "_on_game_loaded")
 	
 	G.connect("player_location_updated", Starmap, "_on_player_location_updated")
 	G.connect("player_location_updated", TextLeft, "_on_player_location_updated")
@@ -42,7 +42,7 @@ func _ready() -> void:
 	MainMenu.rect_position.x = -MainMenu.rect_size.x
 	
 	# set player to random star at beginning
-	Player.location = StarsArray[randi() % StarsArray.size()]
+	Player.update_location(StarsArray[randi() % StarsArray.size()])
 	G.emit_signal("player_location_updated", Player)
 	G.emit_signal("destination_set", null, true)
 
@@ -59,7 +59,7 @@ func _process(_delta: float) -> void:
 		if Input.is_action_just_pressed("jump_starlane"):
 			Player.status = G.IN.STARLANE
 			Player.came_from = G.FROM.SPACE
-			Player.location = Starmap.get_starlane_from_stars(Player.location, Player.destination)
+			Player.update_location(Player.location, Player.destination)
 			G.emit_signal("player_location_updated", Player)
 			TextRight.general_options(Player)
 			
@@ -72,7 +72,7 @@ func _process(_delta: float) -> void:
 		if Input.is_action_just_pressed("continue_travel"):
 			Player.status = G.IN.SPACE
 			Player.came_from = G.FROM.STARLANE
-			Player.location = Player.destination
+			Player.update_location(Player.destination)
 			Player.destination = null
 			G.emit_signal("destination_set", null, true)
 			G.emit_signal("player_location_updated", Player)
@@ -117,11 +117,14 @@ func _process(_delta: float) -> void:
 func _on_star_clicked(star: Star) -> void:
 	if Player.modal == G.DOING.NAV:
 		
+		if Player.location_type != "Star":
+			Hinweiszeile.display_message("You can't use the navigation computer while on a lane.")
+			return
 		if Player.location == star:
 			Hinweiszeile.display_message("You are already there.")
 			return
-		for lane in Player.location.lanes:
-			if star == lane.get_other_side(Player.location):
+		for adj in Player.location.adj_stars:
+			if star == adj:
 				Player.destination = star
 				Player.modal = -1
 				TextRight.general_options(Player)
@@ -132,3 +135,13 @@ func _on_star_clicked(star: Star) -> void:
 
 func _on_main_menu_closed() -> void:
 	Player.modal = G.DOING.NO_MODAL
+
+
+func _on_game_saved(slot: int) -> void:
+	G.save_game(self, slot)
+
+
+func _on_game_loaded(slot: int):
+	var init_seed = G.load_game(slot)
+	print("loaded! ", init_seed)
+	Starmap.custom_ready(init_seed)

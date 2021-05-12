@@ -158,6 +158,7 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
 enabled_focus_mode = 0
 text = "Save"
 
@@ -188,6 +189,7 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
 enabled_focus_mode = 0
 text = "Load"
 
@@ -205,6 +207,7 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
 enabled_focus_mode = 0
 text = "Save"
 
@@ -235,6 +238,7 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
 enabled_focus_mode = 0
 text = "Load"
 
@@ -282,4 +286,6 @@ text = "Fullscreen / Windowed"
 [connection signal="pressed" from="M/VB/HB-TopRow/NewGame" to="." method="_on_NewGame_pressed"]
 [connection signal="pressed" from="M/VB/HB-TopRow/BackToGame" to="." method="_on_BackToGame_pressed"]
 [connection signal="pressed" from="M/VB/HB-TopRow/Quit" to="." method="_on_Quit_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Save_1" to="." method="_on_Save_1_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Load_1" to="." method="_on_Load_1_pressed"]
 [connection signal="pressed" from="M/VB/HB-BottomRow/Fullscreen" to="." method="_on_Fullscreen_pressed"]

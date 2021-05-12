@@ -4,7 +4,7 @@ func get_class(): return "Star"
 
 
 var sector := Vector2.ZERO
-var lanes := [] # starlanes connecting to this star
+var adj_stars := [] # connected stars
 
 onready var Infotext = $Z_Index/Infotext
 
@@ -19,6 +19,13 @@ func set_px_size(size: float) -> void:
 	$Icon.rect_scale = Vector2(size / 16, size / 16)
 
 
+func add_adj(s: Star) -> void:
+	if adj_stars.find(s) > -1:
+		push_error("Star %s is already noted as adjacent to this star (%s)." % [s.name, self.name])
+		return
+	adj_stars.append(s)
+
+
 func set_label() -> void:
 	var text = [
 		self.name,
@@ -27,8 +34,8 @@ func set_label() -> void:
 		"Pixelpos: %d, %d" % [position.x, position.y],
 		"",
 	]
-	for l in lanes:
-		text.append("-> " + l.get_other_side(self).name)
+	for a in adj_stars:
+		text.append("-> " + a.name)
 	Infotext.text = PoolStringArray(text).join("\n")
 
 

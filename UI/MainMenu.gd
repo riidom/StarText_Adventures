@@ -10,7 +10,7 @@ func _on_closed() -> void:
 
 
 func _on_NewGame_pressed() -> void:
-	print("New Game")
+	pass
 
 
 func _on_Quit_pressed() -> void:
@@ -23,3 +23,11 @@ func _on_BackToGame_pressed() -> void:
 
 func _on_Fullscreen_pressed() -> void:
 	OS.window_fullscreen = !OS.window_fullscreen
+
+
+func _on_Save_1_pressed() -> void:
+	G.emit_signal("game_saved", 1)
+
+
+func _on_Load_1_pressed() -> void:
+	G.emit_signal("game_loaded", 1)

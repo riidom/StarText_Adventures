@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Starmap/Starmap.gd" type="Script" id=1]
-[ext_resource path="res://Starmap/MouseCoords.gd" type="Script" id=2]
+[ext_resource path="res://Starmap/Star.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Starmap/destination_indicator.png" type="Texture" id=3]
 
 [node name="Starmap" type="Node2D"]
@@ -16,21 +16,37 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="StarlanesFolder" type="Node2D" parent="."]
-
 [node name="StarsFolder" type="Node2D" parent="."]
 
-[node name="MouseCoords" type="Node2D" parent="."]
-visible = false
-z_index = 2
-script = ExtResource( 2 )
+[node name="Star" parent="StarsFolder" instance=ExtResource( 2 )]
 
-[node name="xy" type="Label" parent="MouseCoords"]
-margin_right = 40.0
-margin_bottom = 14.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="Star2" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star3" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star4" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star5" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star6" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star7" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star8" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star9" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star10" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star11" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star12" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star13" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star14" parent="StarsFolder" instance=ExtResource( 2 )]
+
+[node name="Star15" parent="StarsFolder" instance=ExtResource( 2 )]
 
 [node name="PlayerIndicator" type="Sprite" parent="."]
 
