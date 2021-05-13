@@ -9,8 +9,6 @@ var adj_stars := [] # connected stars
 onready var Infotext = $Z_Index/Infotext
 
 
-
-
 func _ready():
 	Infotext.visible = false
 

@@ -49,8 +49,18 @@ func add(text: String, linebreaks: int = 1) -> void:
 		Label.text += "\n"
 
 
-func _on_player_location_updated(player: Player) -> void:
-	print_location(player)
+func get_text() -> String:
+	# for saving data
+	return Label.text
+
+
+func replace_text(t: String) -> void:
+	# for loading data
+	Label.text = t
+
+
+func _on_player_location_updated(player: Player, silent: bool = false) -> void:
+	if !silent: print_location(player)
 
 
 func _on_destination_set(star: Star, silent: bool = false) -> void:

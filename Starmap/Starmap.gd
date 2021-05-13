@@ -24,28 +24,58 @@ var destination_icon = preload("res://Starmap/destination_indicator.png")
 func _ready() -> void:
 	pass
 
+
 func custom_ready(data = null) -> void:
 	if !data:
 		randomize()
-		# 113798264
 		init_seed = randi()# % 1000000
+		seed(init_seed)
+		init_map()
 	else:
-		init_seed = 123
-	print("Seed: %s" % init_seed)
-	seed(init_seed)
-	init_map()
+		load_map(data)
+
+
+func load_map(d) -> void:
+	NameGen.used = {}
+	init_seed = d.s.init_seed
+	map = d.s.map
+	amount_of_stars = d.s.amount_of_stars
+	lanes = d.s.lanes
+	map_size = d.s.map_size
+	sector_size = d.s.sector_size
+	sector_padding = d.s.sector_padding
+	map_px_size = d.s.map_px_size
+	draw_sector_grid = d.s.draw_sector_grid
+	
+	# first give all star-nodes the correct name
+	for i in amount_of_stars:
+		var star:Star = StarsFolder.get_child(i)
+		var loaded = d.s.stars[i]
+		star.name = loaded[0]
+		star.position = loaded[1]
+		star.sector = loaded[2]
+	
+	# then iterate again to assign adjacent stars, which requires correct star names
+	for i in amount_of_stars:
+		var star: Star = StarsFolder.get_child(i)
+		star.adj_stars.clear()
+		var loaded_adj: Array = d.s.stars[i][3] # only asking for 4th element (array-in-array of adj. stars)
+		for a in loaded_adj:
+			star.adj_stars.append(get_star_node_by_name(a))
+	
+	update()
+
+
+func get_star_node_by_name(name: String):
+	for s in StarsFolder.get_children():
+		if s.name == name: return s
+	push_error("No star named %s inside 'StarsFolder'." % name)
 
 
 func init_map() -> void:
-	map.clear()
 	NameGen.used = {}
 	lanes = {}
-	# set up 2D array
-	for x in range(map_size.x):
-		map.append([])
-		for _y in range(map_size.y):
-			map[x].append(null)
-	
+	self.map = init_map_array(map_size)
 	# instance and place stars
 	for i in amount_of_stars:
 		while true:
@@ -58,6 +88,15 @@ func init_map() -> void:
 	place_lanes()
 
 
+func init_map_array(size: Vector2) -> Array:
+	var new_map := []
+	for x in range(size.x):
+		new_map.append([])
+		for _y in range(size.y):
+			new_map[x].append(null)
+	return new_map
+
+	
 func define_star(index: int, x: int, y: int) -> void:
 	var star = StarsFolder.get_child(index)
 	star.sector = Vector2(x, y)
@@ -95,15 +134,16 @@ func place_lanes() -> void:
 		undone_stars.remove(s)
 	
 	# add random lanes, check for intersections and narrow angles
-	done_stars.shuffle()
-	for s1 in done_stars:
-		for s2 in done_stars:
-			if s1 == s2: continue
-			if lanes.has(assemble_lane_name(s1.name, s2.name)): continue
-			if is_intersecting(s1, s2): continue
-			if is_touching_star(s1, s2, done_stars): continue
-			if are_angles_narrow(s1, s2, 75): continue
-			add_lane(s1, s2)
+	for _i in range(3):
+		done_stars.shuffle()
+		for s1 in done_stars:
+			for s2 in done_stars:
+				if s1 == s2: continue
+				if lanes.has(assemble_lane_name(s1.name, s2.name)): continue
+				if is_intersecting(s1, s2): continue
+				if is_touching_star(s1, s2, done_stars): continue
+				if are_angles_narrow(s1, s2, 25): continue
+				add_lane(s1, s2)
 
 
 func is_intersecting(s1: Star, s2: Star) -> bool:
@@ -218,20 +258,11 @@ func draw_bg_stars(amount: float, max_sat: float, min_val: float, size: float, a
 		draw_circle(bg_star_pos, size, bg_star_col)
 
 
-func _input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_accept"):
-		recreate_map()
-
-
-func recreate_map() -> void:
-	var _x = get_tree().reload_current_scene()
-
-
 func get_size() -> float:
 	return map_px_size
 
 
-func _on_player_location_updated(player):
+func _on_player_location_updated(player, _silent: bool = false):
 	if player.location_type == "Star":
 		PlayerIndicator.texture = player_on_star_icon
 		PlayerIndicator.position = player.location.position

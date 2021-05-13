@@ -6,7 +6,7 @@ onready var S2 = $HBox3/Label2
 onready var S3 = $HBox3/Label3
 
 
-func _on_player_location_updated(player: Player) -> void:
+func _on_player_location_updated(player: Player, _silent: bool = false) -> void:
 	if player.status == G.IN.SPACE:
 		S1.text = "Ship is in space"
 	elif player.status == G.IN.STARLANE:

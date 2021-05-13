@@ -44,5 +44,5 @@ func err(variable: String) -> void:
 	print_stack()
 
 
-func _on_player_location_updated(player: Player) -> void:
+func _on_player_location_updated(player: Player, _silent: bool = false) -> void:
 	general_options(player)

@@ -19,24 +19,24 @@ __meta__ = {
 [node name="M" type="MarginContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_constants/margin_right = 100
+custom_constants/margin_right = 50
 custom_constants/margin_top = 50
-custom_constants/margin_left = 100
+custom_constants/margin_left = 50
 custom_constants/margin_bottom = 50
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="VB" type="VBoxContainer" parent="M"]
-margin_left = 100.0
+margin_left = 50.0
 margin_top = 50.0
-margin_right = 1052.0
+margin_right = 1102.0
 margin_bottom = 564.0
 custom_constants/separation = 100
 
 [node name="HB-TopRow" type="HBoxContainer" parent="M/VB"]
-margin_left = 62.0
-margin_right = 890.0
+margin_left = 112.0
+margin_right = 940.0
 margin_bottom = 54.0
 size_flags_horizontal = 6
 custom_constants/separation = 100
@@ -54,7 +54,6 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
-disabled = true
 enabled_focus_mode = 0
 text = "New Game"
 
@@ -94,11 +93,11 @@ text = "Quit"
 
 [node name="GridContainer" type="GridContainer" parent="M/VB"]
 margin_top = 154.0
-margin_right = 952.0
+margin_right = 1052.0
 margin_bottom = 356.0
 custom_constants/vseparation = 20
-custom_constants/hseparation = 50
-columns = 3
+custom_constants/hseparation = 20
+columns = 4
 
 [node name="Save_1" type="Button" parent="M/VB/GridContainer"]
 margin_right = 156.0
@@ -117,8 +116,8 @@ enabled_focus_mode = 0
 text = "Save"
 
 [node name="Info_1" type="Label" parent="M/VB/GridContainer"]
-margin_left = 206.0
-margin_right = 745.0
+margin_left = 176.0
+margin_right = 680.0
 margin_bottom = 54.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
@@ -128,8 +127,8 @@ align = 1
 valign = 1
 
 [node name="Load_1" type="Button" parent="M/VB/GridContainer"]
-margin_left = 795.0
-margin_right = 952.0
+margin_left = 700.0
+margin_right = 857.0
 margin_bottom = 54.0
 focus_mode = 0
 custom_styles/hover = ExtResource( 2 )
@@ -141,8 +140,27 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
 enabled_focus_mode = 0
 text = "Load"
+
+[node name="Delete_1" type="Button" parent="M/VB/GridContainer"]
+margin_left = 877.0
+margin_right = 1052.0
+margin_bottom = 54.0
+focus_mode = 0
+custom_styles/hover = ExtResource( 2 )
+custom_styles/pressed = ExtResource( 4 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
+enabled_focus_mode = 0
+text = "Delete"
 
 [node name="Save_2" type="Button" parent="M/VB/GridContainer"]
 margin_top = 74.0
@@ -158,14 +176,13 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
-disabled = true
 enabled_focus_mode = 0
 text = "Save"
 
 [node name="Info_2" type="Label" parent="M/VB/GridContainer"]
-margin_left = 206.0
+margin_left = 176.0
 margin_top = 74.0
-margin_right = 745.0
+margin_right = 680.0
 margin_bottom = 128.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
@@ -175,9 +192,9 @@ align = 1
 valign = 1
 
 [node name="Load_2" type="Button" parent="M/VB/GridContainer"]
-margin_left = 795.0
+margin_left = 700.0
 margin_top = 74.0
-margin_right = 952.0
+margin_right = 857.0
 margin_bottom = 128.0
 focus_mode = 0
 custom_styles/hover = ExtResource( 2 )
@@ -192,6 +209,25 @@ custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
 disabled = true
 enabled_focus_mode = 0
 text = "Load"
+
+[node name="Delete_2" type="Button" parent="M/VB/GridContainer"]
+margin_left = 877.0
+margin_top = 74.0
+margin_right = 1052.0
+margin_bottom = 128.0
+focus_mode = 0
+custom_styles/hover = ExtResource( 2 )
+custom_styles/pressed = ExtResource( 4 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
+enabled_focus_mode = 0
+text = "Delete"
 
 [node name="Save_3" type="Button" parent="M/VB/GridContainer"]
 margin_top = 148.0
@@ -207,14 +243,13 @@ custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
 custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
-disabled = true
 enabled_focus_mode = 0
 text = "Save"
 
 [node name="Info_3" type="Label" parent="M/VB/GridContainer"]
-margin_left = 206.0
+margin_left = 176.0
 margin_top = 148.0
-margin_right = 745.0
+margin_right = 680.0
 margin_bottom = 202.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
@@ -224,9 +259,9 @@ align = 1
 valign = 1
 
 [node name="Load_3" type="Button" parent="M/VB/GridContainer"]
-margin_left = 795.0
+margin_left = 700.0
 margin_top = 148.0
-margin_right = 952.0
+margin_right = 857.0
 margin_bottom = 202.0
 focus_mode = 0
 custom_styles/hover = ExtResource( 2 )
@@ -242,10 +277,29 @@ disabled = true
 enabled_focus_mode = 0
 text = "Load"
 
+[node name="Delete_3" type="Button" parent="M/VB/GridContainer"]
+margin_left = 877.0
+margin_top = 148.0
+margin_right = 1052.0
+margin_bottom = 202.0
+focus_mode = 0
+custom_styles/hover = ExtResource( 2 )
+custom_styles/pressed = ExtResource( 4 )
+custom_styles/disabled = ExtResource( 6 )
+custom_styles/normal = ExtResource( 2 )
+custom_fonts/font = ExtResource( 5 )
+custom_colors/font_color_disabled = Color( 0.258824, 0.258824, 0.258824, 1 )
+custom_colors/font_color = Color( 1, 1, 1, 0.752941 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
+disabled = true
+enabled_focus_mode = 0
+text = "Delete"
+
 [node name="HB-BottomRow" type="HBoxContainer" parent="M/VB"]
-margin_left = 93.0
+margin_left = 143.0
 margin_top = 456.0
-margin_right = 859.0
+margin_right = 909.0
 margin_bottom = 510.0
 size_flags_horizontal = 6
 custom_constants/separation = 100
@@ -288,4 +342,11 @@ text = "Fullscreen / Windowed"
 [connection signal="pressed" from="M/VB/HB-TopRow/Quit" to="." method="_on_Quit_pressed"]
 [connection signal="pressed" from="M/VB/GridContainer/Save_1" to="." method="_on_Save_1_pressed"]
 [connection signal="pressed" from="M/VB/GridContainer/Load_1" to="." method="_on_Load_1_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Delete_1" to="." method="_on_Delete_1_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Save_2" to="." method="_on_Save_2_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Load_2" to="." method="_on_Load_2_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Delete_2" to="." method="_on_Delete_2_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Save_3" to="." method="_on_Save_3_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Load_3" to="." method="_on_Load_3_pressed"]
+[connection signal="pressed" from="M/VB/GridContainer/Delete_3" to="." method="_on_Delete_3_pressed"]
 [connection signal="pressed" from="M/VB/HB-BottomRow/Fullscreen" to="." method="_on_Fullscreen_pressed"]

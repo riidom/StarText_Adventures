@@ -27,6 +27,7 @@ func _ready() -> void:
 	
 	G.connect("game_saved", self, "_on_game_saved")
 	G.connect("game_loaded", self, "_on_game_loaded")
+	G.connect("game_loaded", Hinweiszeile, "_on_game_loaded")
 	
 	G.connect("player_location_updated", Starmap, "_on_player_location_updated")
 	G.connect("player_location_updated", TextLeft, "_on_player_location_updated")
@@ -142,6 +143,9 @@ func _on_game_saved(slot: int) -> void:
 
 
 func _on_game_loaded(slot: int):
-	var init_seed = G.load_game(slot)
-	print("loaded! ", init_seed)
-	Starmap.custom_ready(init_seed)
+	var save_data = G.load_game(slot)
+	Starmap.custom_ready(save_data)
+	Player.load_data(save_data, StarsFolder.get_children())
+	TextLeft.replace_text(save_data.t.text)
+	G.emit_signal("player_location_updated", Player, true)
+	G.emit_signal("destination_set", Player.destination, true)
