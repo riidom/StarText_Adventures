@@ -15,6 +15,8 @@ signal main_menu_opened
 signal game_saved(slot)
 # warning-ignore:unused_signal
 signal game_loaded(slot)
+# warning-ignore:unused_signal
+signal language_toggled
 
 # warning-ignore:unused_signal
 signal player_location_updated(player)
@@ -22,6 +24,33 @@ signal player_location_updated(player)
 signal star_clicked(star)
 # warning-ignore:unused_signal
 signal destination_set(star, silent)
+
+var settings = load_settings()
+
+
+func save_settings() -> void:
+	var file_name = "user://settings.save"
+	var file = File.new()
+	file.open(file_name, File.WRITE)
+	
+	file.store_line(settings.lang)
+	
+	file.close()
+
+
+func load_settings() -> Dictionary:
+	settings = {}
+	settings.lang = "en"	
+	var file_name = "user://settings.save"
+	var file = File.new()
+	if !file.file_exists(file_name): return settings
+	file.open(file_name, File.READ)
+	
+	
+	settings.lang = file.get_line()
+	
+	file.close()
+	return settings
 
 
 func save_game(data, slot: int) -> void:

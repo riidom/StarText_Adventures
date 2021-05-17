@@ -28,6 +28,7 @@ func _ready() -> void:
 	G.connect("game_saved", self, "_on_game_saved")
 	G.connect("game_loaded", self, "_on_game_loaded")
 	G.connect("game_loaded", Hinweiszeile, "_on_game_loaded")
+	G.connect("language_toggled", self, "_on_language_toggled")
 	
 	G.connect("player_location_updated", Starmap, "_on_player_location_updated")
 	G.connect("player_location_updated", TextLeft, "_on_player_location_updated")
@@ -41,6 +42,10 @@ func _ready() -> void:
 	
 	# hide menu
 	MainMenu.rect_position.x = -MainMenu.rect_size.x
+	
+	# load settings and init strings
+	G.load_settings()
+	#T.init()
 	
 	# set player to random star at beginning
 	Player.update_location(StarsArray[randi() % StarsArray.size()])
@@ -149,3 +154,11 @@ func _on_game_loaded(slot: int):
 	TextLeft.replace_text(save_data.t.text)
 	G.emit_signal("player_location_updated", Player, true)
 	G.emit_signal("destination_set", Player.destination, true)
+
+
+func _on_language_toggled() -> void:
+	if G.settings.lang == "de":
+		G.settings.lang = "en"
+	else:
+		G.settings.lang = "de"
+	G.save_settings()

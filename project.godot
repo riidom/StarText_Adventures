@@ -31,8 +31,9 @@ run/main_scene="res://Main/__GAME__.tscn"
 
 [autoload]
 
-NameGen="*res://Globals/NameGen.gd"
 G="*res://Globals/G.gd"
+NameGen="*res://Globals/NameGen.gd"
+T="*res://Globals/Texte.gd"
 
 [debug]
 

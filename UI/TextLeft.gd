@@ -5,8 +5,10 @@ onready var Label = $Scroll/Margin/RichTextLabel
 
 
 func _ready() -> void:
-	add("Welcome onboard, captain!")
-	add("Your ship is ready.", 2)
+	add(T.get("T_Welcome_1"))
+	add(T.get("T_Welcome_2"), 2)
+	#add("Welcome onboard, captain!")
+	#add("The ship is ready.", 2)
 
 
 func print_location(player: Player) -> void:

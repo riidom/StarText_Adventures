@@ -1,6 +1,13 @@
 extends ColorRect
 
 
+onready var NewGame = $M/VB/HB_TopRow/NewGame
+onready var Back = $M/VB/HB_TopRow/BackToGame
+onready var Quit = $M/VB/HB_TopRow/Quit
+
+onready var SwitchLanguage = $M/VB/HB_BottomRow/SwitchLanguage
+onready var Fullscreen = $M/VB/HB_BottomRow/Fullscreen
+
 onready var S1 = $M/VB/GridContainer/Save_1
 onready var I1 = $M/VB/GridContainer/Info_1
 onready var L1 = $M/VB/GridContainer/Load_1
@@ -15,6 +22,20 @@ onready var S3 = $M/VB/GridContainer/Save_3
 onready var I3 = $M/VB/GridContainer/Info_3
 onready var L3 = $M/VB/GridContainer/Load_3
 onready var D3 = $M/VB/GridContainer/Delete_3
+
+
+func _ready() -> void:
+	NewGame.text = T.get("MM_NewGame")
+	Back.text = T.get("MM_Back")
+	Quit.text = T.get("MM_Quit")
+	SwitchLanguage.text = T.get("MM_SwitchLanguage")
+	Fullscreen.text = T.get("MM_Fullscreen")
+	S1.text = T.get("MM_Save")
+	S2.text = T.get("MM_Save")
+	S3.text = T.get("MM_Save")
+	L1.text = T.get("MM_Load")
+	L2.text = T.get("MM_Load")
+	L3.text = T.get("MM_Load")
 
 
 func update_savegame_display() -> void:
@@ -51,9 +72,9 @@ func check_saved_game(slot: int):
 	var file = File.new()
 	if file.file_exists(file_name):
 		file.open(file_name, File.READ)
-		var meta = file.get_line()
+		var title = file.get_line()
 		file.close()
-		return meta
+		return title
 	else:
 		return "---"
 
@@ -134,3 +155,7 @@ func _on_Delete_2_pressed() -> void:
 
 func _on_Delete_3_pressed() -> void:
 	delete_save_game(3)
+
+
+func _on_SwitchLanguage_pressed() -> void:
+	G.emit_signal("language_toggled")
