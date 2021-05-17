@@ -8,15 +8,15 @@ onready var S3 = $HBox3/Label3
 
 func _on_player_location_updated(player: Player, _silent: bool = false) -> void:
 	if player.status == G.IN.SPACE:
-		S1.text = "Ship is in space"
+		S1.text = T.get("S_InSpace")
 	elif player.status == G.IN.STARLANE:
-		S1.text = "Ship is on starlane"
+		S1.text = T.get("S_OnLane")
 	elif player.status == G.IN.STATION:
-		S1.text = "Ship is in station"
+		S1.text = T.get("S_InStation")
 
 
 func _on_destination_set(star: Star, _silent: bool = false) -> void:
 	if star:
-		S2.text = "Destination: %s" % star.name
+		S2.text = T.get("S_destination_set", {star_name = star.name})
 	else:
-		S2.text = "No destination set"
+		S2.text = T.get("S_destination_cleared")

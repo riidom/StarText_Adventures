@@ -7,40 +7,41 @@ onready var Label = $Scroll/Margin/RichTextLabel
 func _ready() -> void:
 	add(T.get("T_Welcome_1"))
 	add(T.get("T_Welcome_2"), 2)
-	#add("Welcome onboard, captain!")
-	#add("The ship is ready.", 2)
 
 
 func print_location(player: Player) -> void:
-	add("You are ", 0)
-	add(tell_system(player), 0)
+
+	var mention_system = tell_system(player)
+	var loc = ""
+	var s_at = player.location.name if player.location else ""
+	var s_from = player.origin.name if player.origin else ""
+	var s_to = player.destination.name if player.destination else ""
 	
 	if player.status == G.IN.STATION:
-		
-		add("inside the station.", 2)
+		loc = "station"
 		
 	if player.status == G.IN.SPACE:
-		
 		if player.came_from == G.FROM.STATION:
-			add("outside the station.", 2)
+			loc = "station->space"
 		elif player.came_from == G.FROM.STARLANE:
-			add("nearby the station, after leaving the starlane.", 2)
+			loc = "lane->space"
 		elif player.came_from == G.FROM.SPACE:
-			add("still in space?", 2)
+			loc = "space->space"
 	
 	if player.status == G.IN.STARLANE:
-		
 		if player.came_from == G.FROM.STARLANE:
-			add("on the starlane between %s and %s." % [player.origin.name, player.destination.name], 2)
+			loc = "lane"
 		elif player.came_from == G.FROM.SPACE:
-			add("entering the starlane towards %s." % player.destination.name, 2)
+			loc = "space->lane"
+	
+	add(T.get("T_location_description",
+		{mention_system = mention_system, loc = loc, s_at = s_at, s_from = s_from, s_to = s_to}), 2)
 
 
-func tell_system(player: Player) -> String:
-	if (player.came_from == G.FROM.STARLANE and player.status != G.IN.STARLANE)\
-	or (player.status == G.IN.STATION and player.came_from == G.FROM.GAME_START):
-		return "in the system %s, " % player.location.name
-	else: return ""
+
+func tell_system(player: Player) -> bool:
+	return (player.came_from == G.FROM.STARLANE and player.status != G.IN.STARLANE)\
+		or (player.status == G.IN.STATION and player.came_from == G.FROM.GAME_START)
 
 
 func add(text: String, linebreaks: int = 1) -> void:
@@ -68,6 +69,6 @@ func _on_player_location_updated(player: Player, silent: bool = false) -> void:
 func _on_destination_set(star: Star, silent: bool = false) -> void:
 	if silent: return
 	if star:
-		add("Destination set to %s." % star.name, 2)
+		add(T.get("T_destination_set", {star_name = star.name}), 2)
 	else:
-		add("Destination cleared.", 2)
+		add(T.get("T_destination_cleared"))
