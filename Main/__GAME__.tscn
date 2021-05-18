@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Starmap/Starmap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/font_res/SG-Bold_16px.tres" type="DynamicFont" id=2]
@@ -12,6 +12,9 @@
 [ext_resource path="res://UI/Hinweiszeile.gd" type="Script" id=10]
 [ext_resource path="res://UI/font_res/SG-Light_24px.tres" type="DynamicFont" id=11]
 [ext_resource path="res://UI/MainMenu.tscn" type="PackedScene" id=12]
+[ext_resource path="res://UI/icons/ship_in_station.png" type="Texture" id=13]
+[ext_resource path="res://UI/icons/nav_destination.png" type="Texture" id=14]
+[ext_resource path="res://UI/font_res/SG-Light_12px.tres" type="DynamicFont" id=15]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends HBoxContainer
@@ -88,24 +91,31 @@ margin_right = 410.0
 margin_bottom = 41.0
 custom_constants/separation = 10
 
-[node name="Label" type="Label" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
-margin_right = 64.0
-margin_bottom = 31.0
-custom_styles/normal = ExtResource( 9 )
-custom_fonts/font = ExtResource( 3 )
-text = "LABEL"
+[node name="Label" type="TextureRect" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
+margin_top = 3.0
+margin_right = 24.0
+margin_bottom = 27.0
+mouse_filter = 2
+size_flags_vertical = 4
+texture = ExtResource( 13 )
 
-[node name="Label2" type="Label" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
-margin_left = 74.0
-margin_right = 203.0
+[node name="Label2" type="Button" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
+margin_left = 34.0
+margin_right = 164.0
 margin_bottom = 31.0
-custom_styles/normal = ExtResource( 9 )
-custom_fonts/font = ExtResource( 3 )
-text = "No destination"
+rect_min_size = Vector2( 130, 0 )
+custom_fonts/font = ExtResource( 15 )
+custom_colors/font_color = Color( 1, 1, 1, 1 )
+custom_constants/hseparation = 6
+button_mask = 0
+text = "---"
+icon = ExtResource( 14 )
+flat = true
+align = 0
 
 [node name="Label3" type="Label" parent="MainUI/HBox/Map_Status/Statuszeile/HBox3"]
-margin_left = 213.0
-margin_right = 256.0
+margin_left = 174.0
+margin_right = 217.0
 margin_bottom = 31.0
 custom_styles/normal = ExtResource( 9 )
 custom_fonts/font = ExtResource( 3 )

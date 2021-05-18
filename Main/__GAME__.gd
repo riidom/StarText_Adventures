@@ -41,7 +41,7 @@ func _ready() -> void:
 	G.connect("destination_set", TextLeft, "_on_destination_set")
 	
 	# hide menu
-	MainMenu.rect_position.x = -MainMenu.rect_size.x
+	MainMenu.rect_position.x = -MainMenu.rect_size.x * 1.1
 	
 	# load settings and init strings
 	G.load_settings()

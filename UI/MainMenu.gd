@@ -95,7 +95,7 @@ func _on_opened() -> void:
 
 
 func _on_closed() -> void:
-	rect_position.x = -rect_size.x
+	rect_position.x = -rect_size.x * 1.1
 
 
 func _on_NewGame_pressed() -> void:
