@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://UI/font_res/SG-Light_24px.tres" type="DynamicFont" id=1]
+[ext_resource path="res://UI/font_res/SG_24px_Light.tres" type="DynamicFont" id=1]
 [ext_resource path="res://UI/stylebox_res/MenuButtons-normal.tres" type="StyleBox" id=2]
 [ext_resource path="res://UI/MainMenu.gd" type="Script" id=3]
 [ext_resource path="res://UI/stylebox_res/MenuButtons-pressed.tres" type="StyleBox" id=4]
@@ -10,7 +10,9 @@
 [ext_resource path="res://UI/icons/menu_delete_hover.png" type="Texture" id=8]
 [ext_resource path="res://UI/icons/menu_delete_disabled.png" type="Texture" id=9]
 [ext_resource path="res://UI/icons/menu_delete_pressed.png" type="Texture" id=10]
-[ext_resource path="res://UI/font_res/SG-Light_12px.tres" type="DynamicFont" id=11]
+[ext_resource path="res://UI/font_res/SG_12px_Light.tres" type="DynamicFont" id=11]
+
+
 
 [node name="MainMenu" type="ColorRect"]
 anchor_right = 1.0
