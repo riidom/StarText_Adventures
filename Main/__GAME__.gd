@@ -55,55 +55,17 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if Player.status == G.IN.SPACE:
-		
-		if Input.is_action_just_pressed("dock_station"):
-			Player.status = G.IN.STATION
-			Player.came_from = G.FROM.SPACE
-			G.emit_signal("player_location_updated", Player)
-			TextRight.general_options(Player)
-		
-		if Input.is_action_just_pressed("jump_starlane"):
-			Player.status = G.IN.STARLANE
-			Player.came_from = G.FROM.SPACE
-			Player.update_location(Player.location, Player.destination)
-			G.emit_signal("player_location_updated", Player)
-			TextRight.general_options(Player)
-			
-		if Input.is_action_just_pressed("navigation"):
-			Player.modal = G.DOING.NAV
-			TextRight.nav_options(Player)
-			
+		process_in_space()
 	if Player.status == G.IN.STARLANE:
-		
-		if Input.is_action_just_pressed("continue_travel"):
-			Player.status = G.IN.SPACE
-			Player.came_from = G.FROM.STARLANE
-			Player.update_location(Player.destination)
-			Player.destination = null
-			G.emit_signal("destination_set", null, true)
-			G.emit_signal("player_location_updated", Player)
-			TextRight.general_options(Player)
-	
+		process_in_lane()
 	if Player.status == G.IN.STATION:
-		
-		if Input.is_action_just_pressed("navigation"):
-			Player.modal = G.DOING.NAV
-			TextRight.nav_options(Player)
-		
-		if Input.is_action_just_pressed("exit_station"):
-			Player.status = G.IN.SPACE
-			Player.came_from = G.FROM.STATION
-			G.emit_signal("player_location_updated", Player)
-			TextRight.general_options(Player)
-			
+		process_in_station()
+	# ESC-key handling	
 	if Player.modal == G.DOING.NO_MODAL:
-		
 		if Input.is_action_just_pressed("ui_cancel"):
 			Player.modal = G.DOING.MAIN_MENU
 			G.emit_signal("main_menu_opened")
-			
 	else:
-		
 		if Input.is_action_just_pressed("ui_cancel"):
 			if Player.modal == G.DOING.NAV:
 				TextRight.general_options(Player)
@@ -112,12 +74,53 @@ func _process(_delta: float) -> void:
 			Player.modal = G.DOING.NO_MODAL
 	
 	if Player.modal == G.DOING.NAV:
-		
 		if Input.is_action_just_pressed("clear"):
 			Player.destination = null
 			G.emit_signal("destination_set", null)
 			Player.modal = G.DOING.NO_MODAL
 			TextRight.general_options(Player)
+
+
+func process_in_space() -> void:
+	if Input.is_action_just_pressed("dock_station"):
+		Player.status = G.IN.STATION
+		Player.came_from = G.FROM.SPACE
+		G.emit_signal("player_location_updated", Player)
+		TextRight.general_options(Player)
+	
+	if Input.is_action_just_pressed("jump_starlane"):
+		Player.status = G.IN.STARLANE
+		Player.came_from = G.FROM.SPACE
+		Player.update_location(Player.location, Player.destination)
+		G.emit_signal("player_location_updated", Player)
+		TextRight.general_options(Player)
+		
+	if Input.is_action_just_pressed("navigation"):
+		Player.modal = G.DOING.NAV
+		TextRight.nav_options(Player)
+
+
+func process_in_lane() -> void:
+	if Input.is_action_just_pressed("continue_travel"):
+		Player.status = G.IN.SPACE
+		Player.came_from = G.FROM.STARLANE
+		Player.update_location(Player.destination)
+		Player.destination = null
+		G.emit_signal("destination_set", null, true)
+		G.emit_signal("player_location_updated", Player)
+		TextRight.general_options(Player)
+
+
+func process_in_station() -> void:
+	if Input.is_action_just_pressed("navigation"):
+		Player.modal = G.DOING.NAV
+		TextRight.nav_options(Player)
+	
+	if Input.is_action_just_pressed("exit_station"):
+		Player.status = G.IN.SPACE
+		Player.came_from = G.FROM.STATION
+		G.emit_signal("player_location_updated", Player)
+		TextRight.general_options(Player)
 
 
 func _on_star_clicked(star: Star) -> void:

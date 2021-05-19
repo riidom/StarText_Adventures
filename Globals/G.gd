@@ -46,7 +46,6 @@ func load_settings() -> Dictionary:
 	if !file.file_exists(file_name): return settings
 	file.open(file_name, File.READ)
 	
-	
 	settings.lang = file.get_line()
 	
 	file.close()

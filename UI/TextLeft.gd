@@ -10,7 +10,6 @@ func _ready() -> void:
 
 
 func print_location(player: Player) -> void:
-
 	var mention_system = tell_system(player)
 	var loc = ""
 	var s_at = player.location.name if player.location else ""
@@ -36,7 +35,6 @@ func print_location(player: Player) -> void:
 	
 	add(T.get("T_location_description",
 		{mention_system = mention_system, loc = loc, s_at = s_at, s_from = s_from, s_to = s_to}), 2)
-
 
 
 func tell_system(player: Player) -> bool:

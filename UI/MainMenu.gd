@@ -144,7 +144,6 @@ func _on_Load_3_pressed() -> void:
 	G.emit_signal("main_menu_closed")
 
 
-
 func _on_Delete_1_pressed() -> void:
 	delete_save_game(1)
 
