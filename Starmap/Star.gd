@@ -5,7 +5,12 @@ func get_class(): return "Star"
 
 var sector := Vector2.ZERO
 var adj_stars := [] # connected stars
+var index:int
+var position_importance:float
 
+export(Gradient) var heat_gradient
+
+onready var Icon = $Icon
 onready var Infotext = $Z_Index/Infotext
 
 
@@ -14,7 +19,7 @@ func _ready():
 
 	
 func set_px_size(size: float) -> void:
-	$Icon.rect_scale = Vector2(size / 16, size / 16)
+	Icon.rect_scale = Vector2(size / 16, size / 16)
 
 
 func add_adj(s: Star) -> void:
@@ -26,14 +31,15 @@ func add_adj(s: Star) -> void:
 
 func set_label() -> void:
 	var text = [
-		self.name,
+		"(%d) %s" % [self.index, self.name],
+		"%.3f" % self.position_importance,
 		"",
 		"Sector: %02d-%02d" % [sector.x, sector.y],
 		"Pixelpos: %d, %d" % [position.x, position.y],
 		"",
 	]
 	for a in adj_stars:
-		text.append("-> " + a.name)
+		text.append("-> (%d) %s" % [a.index, a.name])
 	Infotext.text = PoolStringArray(text).join("\n")
 
 
@@ -49,3 +55,4 @@ func _on_Icon_mouse_exited() -> void:
 func _on_Icon_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed:
 		G.emit_signal("star_clicked", self)
+

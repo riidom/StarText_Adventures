@@ -73,10 +73,14 @@ func save_game(data, slot: int) -> void:
 	file.store_16(ds.map_px_size)
 	file.store_var(ds.draw_sector_grid)
 	file.store_var(ds.lanes)
+	file.store_var(ds.astar)
 	
 	for i in ds.amount_of_stars:
 		var s:Star = ds.StarsFolder.get_child(i)
-		var star_data := [s.name, s.position, s.sector]
+		var star_data := [
+			s.name, s.position, s.sector, s.index, # 0-3
+			s.position_importance, # 4
+		]
 		var adj_stars := []
 		for a in s.adj_stars:
 			adj_stars.append(a.name)
@@ -124,6 +128,7 @@ func load_game(slot: int) -> Dictionary:
 	d.s.map_px_size = file.get_16()
 	d.s.draw_sector_grid = file.get_var()
 	d.s.lanes = file.get_var()
+	d.s.astar = file.get_var()
 	
 	d.s.stars = []
 	for i in d.s.amount_of_stars:

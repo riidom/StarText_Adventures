@@ -7,6 +7,7 @@ var init_seed := 0
 var map := [] # becomes 2D array
 var amount_of_stars := 15
 var lanes := {}
+var astar = AStar2D.new()
 
 var map_size := Vector2(10, 10) # measured in sectors
 var sector_size := 40 # in pixels
@@ -19,10 +20,6 @@ var player_on_star_icon = preload("res://Starmap/player_indicator_star.png")
 var player_on_lane_icon = preload("res://Starmap/player_indicator_lane.png")
 onready var DestinationIndicator = $DestinationIndicator
 var destination_icon = preload("res://Starmap/destination_indicator.png")
-
-
-func _ready() -> void:
-	pass
 
 
 func custom_ready(data = null) -> void:
@@ -46,6 +43,7 @@ func load_map(d) -> void:
 	sector_padding = d.s.sector_padding
 	map_px_size = d.s.map_px_size
 	draw_sector_grid = d.s.draw_sector_grid
+	astar = d.s.astar
 	
 	# first give all star-nodes the correct name
 	for i in amount_of_stars:
@@ -54,6 +52,8 @@ func load_map(d) -> void:
 		star.name = loaded[0]
 		star.position = loaded[1]
 		star.sector = loaded[2]
+		star.index = loaded[3]
+		star.position_importance = loaded[4]
 	
 	# then iterate again to assign adjacent stars, which requires correct star names
 	for i in amount_of_stars:
@@ -86,6 +86,7 @@ func init_map() -> void:
 			break
 	
 	place_lanes()
+	find_chokepoints()
 
 
 func init_map_array(size: Vector2) -> Array:
@@ -99,6 +100,7 @@ func init_map_array(size: Vector2) -> Array:
 	
 func define_star(index: int, x: int, y: int) -> void:
 	var star = StarsFolder.get_child(index)
+	star.index = index
 	star.sector = Vector2(x, y)
 	star.set_px_size(round(sector_size / 3.0))
 	var star_offset = Vector2(
@@ -108,7 +110,7 @@ func define_star(index: int, x: int, y: int) -> void:
 	star.position = Vector2(x * sector_size, y * sector_size) + star_offset
 	star.name = NameGen.generate_system_name(x, y)
 	map[x][y] = star
-	star.set_label()
+	astar.add_point(star.index, star.position)
 
 
 func place_lanes() -> void:
@@ -144,6 +146,30 @@ func place_lanes() -> void:
 				if is_touching_star(s1, s2, done_stars): continue
 				if are_angles_narrow(s1, s2, 25): continue
 				add_lane(s1, s2)
+
+
+func find_chokepoints() -> void:
+	for s1 in astar.get_points():
+		for s2 in astar.get_points():
+			if s1 == s2: continue
+			for p in astar.get_id_path(s1, s2):
+				StarsFolder.get_child(p).position_importance += 1
+	
+	var imp_min:float = INF
+	var imp_max:float = 0.0
+	for s in StarsFolder.get_children():
+		if s.position_importance < imp_min:
+			imp_min = s.position_importance
+		if s.position_importance > imp_max:
+			imp_max = s.position_importance
+
+	for s in StarsFolder.get_children():
+		s.position_importance -= imp_min
+	imp_max -= imp_min
+	
+	for s in StarsFolder.get_children():
+		s.position_importance /= imp_max
+		s.Icon.self_modulate = s.heat_gradient.interpolate(s.position_importance)
 
 
 func is_intersecting(s1: Star, s2: Star) -> bool:
@@ -208,6 +234,7 @@ func add_lane(star_1: Star, star_2: Star) -> void:
 	lanes[lane_name] = [mid_point, s1.position, s2.position]
 	s1.add_adj(s2)
 	s2.add_adj(s1)
+	astar.connect_points(s1.index, s2.index)
 
 
 func assemble_lane_name(n1: String, n2: String) -> String:
