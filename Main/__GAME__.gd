@@ -27,7 +27,6 @@ func _ready() -> void:
 	
 	G.connect("game_saved", self, "_on_game_saved")
 	G.connect("game_loaded", self, "_on_game_loaded")
-	G.connect("game_loaded", Hinweiszeile, "_on_game_loaded")
 	G.connect("language_toggled", self, "_on_language_toggled")
 	
 	G.connect("player_location_updated", Starmap, "_on_player_location_updated")
@@ -127,10 +126,10 @@ func _on_star_clicked(star: Star) -> void:
 	if Player.modal == G.DOING.NAV:
 		
 		if Player.location_type != "Star":
-			Hinweiszeile.display_message("You can't use the navigation computer while on a lane.")
+			Hinweiszeile.display_message(T.get("A_nav_on_lane"))
 			return
 		if Player.location == star:
-			Hinweiszeile.display_message("You are already there.")
+			Hinweiszeile.display_message(T.get("A_destination_to_current"))
 			return
 		for adj in Player.location.adj_stars:
 			if star == adj:
@@ -139,7 +138,7 @@ func _on_star_clicked(star: Star) -> void:
 				TextRight.general_options(Player)
 				G.emit_signal("destination_set", star)
 				return
-		Hinweiszeile.display_message("Only adjacent stars are valid destinations.")
+		Hinweiszeile.display_message(T.get("A_only_adjacent"))
 
 
 func _on_main_menu_closed() -> void:
@@ -157,11 +156,9 @@ func _on_game_loaded(slot: int):
 	TextLeft.replace_text(save_data.t.text)
 	G.emit_signal("player_location_updated", Player, true)
 	G.emit_signal("destination_set", Player.destination, true)
+	Hinweiszeile.display_message(T.get("A_game_loaded", {slot = slot}))
 
 
 func _on_language_toggled() -> void:
-	if G.settings.lang == "de":
-		G.settings.lang = "en"
-	else:
-		G.settings.lang = "de"
+	G.settings.lang = "de" if G.settings.lang == "en" else "en"
 	G.save_settings()

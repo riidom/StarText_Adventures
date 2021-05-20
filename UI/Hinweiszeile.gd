@@ -21,6 +21,3 @@ func display_message(text: String) -> void:
 	Label.text = text
 	time = 0
 
-
-func _on_game_loaded(slot: int) -> void:
-	display_message("Game %d loaded" % slot)

@@ -96,6 +96,15 @@ func init():
 	
 	prim.de["T_destination_cleared"] = "Ziel im Navigationscomputer gelöscht."
 	prim.en["T_destination_cleared"] = "Destination cleared."
+	
+	prim.de["A_nav_on_lane"] = "Der Navigationscomputer steht auf der Sternenbahn nicht zur Verfügung."
+	prim.en["A_nav_on_lane"] = "You can't use the navigation computer while on a lane."
+	
+	prim.de["A_destination_to_current"] = "Dieses Ziel ist deine momentane Position."
+	prim.en["A_destination_to_current"] = "You are already there."
+	
+	prim.de["A_only_adjacent"] = "Nur benachbarte Sterne sind gültige Ziele"
+	prim.en["A_only_adjacent"] = "Only adjacent stars are valid destinations."
 
 
 func T_location_description(p: Dictionary) -> String:
@@ -162,10 +171,6 @@ func T_destination_set(p: Dictionary) -> String:
 	return text
 
 
-func S_destination_set(p: Dictionary) -> String:
-	var text = ""
-	if lang == "en":
-		text = "Destination: %s" % p.star_name
-	elif lang == "de":
-		text = "Ziel: %s" % p.star_name
-	return text
+func A_game_loaded(p: Dictionary) -> String:
+	return "Spiel %d geladen." % p.slot if lang == "de" else "Game %d loaded." % p.slot
+	
