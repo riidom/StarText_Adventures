@@ -53,19 +53,20 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if Player.status.current == G.IN.SPACE:
-		process_in_space()
-	if Player.status.current == G.IN.STARLANE:
-		process_in_lane()
-	if Player.status.current == G.IN.STATION:
-		process_in_station()
-	# ESC-key handling	
 	if Player.status.modal == G.DOING.NO_MODAL:
-		if Input.is_action_just_pressed("ui_cancel"):
+		if Player.status.current == G.IN.SPACE:
+			process_in_space()
+		if Player.status.current == G.IN.STARLANE:
+			process_in_lane()
+		if Player.status.current == G.IN.STATION:
+			process_in_station()
+	
+	# ESC-key handling
+	if Input.is_action_just_pressed("ui_cancel"):
+		if Player.status.modal == G.DOING.NO_MODAL:
 			Player.status.modal = G.DOING.MAIN_MENU
 			G.emit_signal("main_menu_opened")
-	else:
-		if Input.is_action_just_pressed("ui_cancel"):
+		else:
 			if Player.status.modal == G.DOING.NAV:
 				TextRight.general_options(Player)
 			elif Player.status.modal == G.DOING.MAIN_MENU:
