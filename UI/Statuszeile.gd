@@ -11,11 +11,11 @@ var in_space = preload("res://UI/icons/ship_in_space.png")
 
 
 func _on_player_location_updated(player: Player, _silent: bool = false) -> void:
-	if player.status == G.IN.SPACE:
+	if player.status.current == G.IN.SPACE:
 		S1.texture = in_space
-	elif player.status == G.IN.STARLANE:
+	elif player.status.current == G.IN.STARLANE:
 		S1.texture = in_lane
-	elif player.status == G.IN.STATION:
+	elif player.status.current == G.IN.STATION:
 		S1.texture = in_station
 
 

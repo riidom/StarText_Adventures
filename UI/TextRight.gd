@@ -6,15 +6,15 @@ onready var Label = $Margin/RichTextLabel
 
 func general_options(player: Player) -> void:
 	cls()
-	if player.status == G.IN.SPACE:
+	if player.status.current == G.IN.SPACE:
 		add(T.get("I_D_Dock"), 2)
 		add(T.get("I_N_Nav"), 2)
-		if player.destination:
+		if player.pos.to:
 			add(T.get("I_J_Jump"), 2)
-	elif player.status == G.IN.STATION:
+	elif player.status.current == G.IN.STATION:
 		add(T.get("I_N_Nav"), 2)
 		add(T.get("I_E_Engines"), 2)
-	elif player.status == G.IN.STARLANE:
+	elif player.status.current == G.IN.STARLANE:
 		add(T.get("I_W_Wait"), 2)
 	add(T.get("I_ESC_Menu"), 2)
 
@@ -22,7 +22,7 @@ func general_options(player: Player) -> void:
 func nav_options(player: Player) -> void:
 	cls()
 	add(T.get("I_Nav_Instructions"), 2)
-	if player.destination:
+	if player.pos.to:
 		add(T.get("I_C_ClearNav"), 2)
 	add(T.get("I_ESC_Cancel"), 2)
 

@@ -6,7 +6,7 @@ func get_class(): return "Star"
 var sector := Vector2.ZERO
 var adj_stars := [] # connected stars
 var index:int
-var position_importance:float
+var centrality:float
 
 export(Gradient) var heat_gradient
 
@@ -32,7 +32,7 @@ func add_adj(s: Star) -> void:
 func set_label() -> void:
 	var text = [
 		"(%d) %s" % [self.index, self.name],
-		"%.3f" % self.position_importance,
+		"%.3f" % self.centrality,
 		"",
 		"Sector: %02d-%02d" % [sector.x, sector.y],
 		"Pixelpos: %d, %d" % [position.x, position.y],

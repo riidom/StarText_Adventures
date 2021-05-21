@@ -53,58 +53,58 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if Player.status == G.IN.SPACE:
+	if Player.status.current == G.IN.SPACE:
 		process_in_space()
-	if Player.status == G.IN.STARLANE:
+	if Player.status.current == G.IN.STARLANE:
 		process_in_lane()
-	if Player.status == G.IN.STATION:
+	if Player.status.current == G.IN.STATION:
 		process_in_station()
 	# ESC-key handling	
-	if Player.modal == G.DOING.NO_MODAL:
+	if Player.status.modal == G.DOING.NO_MODAL:
 		if Input.is_action_just_pressed("ui_cancel"):
-			Player.modal = G.DOING.MAIN_MENU
+			Player.status.modal = G.DOING.MAIN_MENU
 			G.emit_signal("main_menu_opened")
 	else:
 		if Input.is_action_just_pressed("ui_cancel"):
-			if Player.modal == G.DOING.NAV:
+			if Player.status.modal == G.DOING.NAV:
 				TextRight.general_options(Player)
-			elif Player.modal == G.DOING.MAIN_MENU:
+			elif Player.status.modal == G.DOING.MAIN_MENU:
 				G.emit_signal("main_menu_closed")
-			Player.modal = G.DOING.NO_MODAL
+			Player.status.modal = G.DOING.NO_MODAL
 	
-	if Player.modal == G.DOING.NAV:
+	if Player.status.modal == G.DOING.NAV:
 		if Input.is_action_just_pressed("clear"):
-			Player.destination = null
+			Player.pos.to = null
 			G.emit_signal("destination_set", null)
-			Player.modal = G.DOING.NO_MODAL
+			Player.status.modal = G.DOING.NO_MODAL
 			TextRight.general_options(Player)
 
 
 func process_in_space() -> void:
 	if Input.is_action_just_pressed("dock_station"):
-		Player.status = G.IN.STATION
-		Player.came_from = G.FROM.SPACE
+		Player.status.current = G.IN.STATION
+		Player.status.came_from = G.FROM.SPACE
 		G.emit_signal("player_location_updated", Player)
 		TextRight.general_options(Player)
 	
 	if Input.is_action_just_pressed("jump_starlane"):
-		Player.status = G.IN.STARLANE
-		Player.came_from = G.FROM.SPACE
-		Player.update_location(Player.location, Player.destination)
+		Player.status.current = G.IN.STARLANE
+		Player.status.came_from = G.FROM.SPACE
+		Player.update_location(Player.pos.at, Player.pos.to)
 		G.emit_signal("player_location_updated", Player)
 		TextRight.general_options(Player)
 		
 	if Input.is_action_just_pressed("navigation"):
-		Player.modal = G.DOING.NAV
+		Player.status.modal = G.DOING.NAV
 		TextRight.nav_options(Player)
 
 
 func process_in_lane() -> void:
 	if Input.is_action_just_pressed("continue_travel"):
-		Player.status = G.IN.SPACE
-		Player.came_from = G.FROM.STARLANE
-		Player.update_location(Player.destination)
-		Player.destination = null
+		Player.status.current = G.IN.SPACE
+		Player.status.came_from = G.FROM.STARLANE
+		Player.update_location(Player.pos.to)
+#		Player.pos.to = null
 		G.emit_signal("destination_set", null, true)
 		G.emit_signal("player_location_updated", Player)
 		TextRight.general_options(Player)
@@ -112,29 +112,29 @@ func process_in_lane() -> void:
 
 func process_in_station() -> void:
 	if Input.is_action_just_pressed("navigation"):
-		Player.modal = G.DOING.NAV
+		Player.status.modal = G.DOING.NAV
 		TextRight.nav_options(Player)
 	
 	if Input.is_action_just_pressed("exit_station"):
-		Player.status = G.IN.SPACE
-		Player.came_from = G.FROM.STATION
+		Player.status.current = G.IN.SPACE
+		Player.status.came_from = G.FROM.STATION
 		G.emit_signal("player_location_updated", Player)
 		TextRight.general_options(Player)
 
 
 func _on_star_clicked(star: Star) -> void:
-	if Player.modal == G.DOING.NAV:
+	if Player.status.modal == G.DOING.NAV:
 		
-		if Player.location_type != "Star":
+		if Player.pos.type != "Star":
 			Hinweiszeile.display_message(T.get("A_nav_on_lane"))
 			return
-		if Player.location == star:
+		if Player.pos.at == star:
 			Hinweiszeile.display_message(T.get("A_destination_to_current"))
 			return
-		for adj in Player.location.adj_stars:
+		for adj in Player.pos.at.adj_stars:
 			if star == adj:
-				Player.destination = star
-				Player.modal = -1
+				Player.pos.to = star
+				Player.status.modal = G.DOING.NO_MODAL
 				TextRight.general_options(Player)
 				G.emit_signal("destination_set", star)
 				return
@@ -142,7 +142,7 @@ func _on_star_clicked(star: Star) -> void:
 
 
 func _on_main_menu_closed() -> void:
-	Player.modal = G.DOING.NO_MODAL
+	Player.status.modal = G.DOING.NO_MODAL
 
 
 func _on_game_saved(slot: int) -> void:
@@ -155,7 +155,7 @@ func _on_game_loaded(slot: int):
 	Player.load_data(save_data, StarsFolder.get_children())
 	TextLeft.replace_text(save_data.t.text)
 	G.emit_signal("player_location_updated", Player, true)
-	G.emit_signal("destination_set", Player.destination, true)
+	G.emit_signal("destination_set", Player.pos.to, true)
 	Hinweiszeile.display_message(T.get("A_game_loaded", {slot = slot}))
 
 

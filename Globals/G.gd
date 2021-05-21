@@ -65,44 +65,35 @@ func save_game(data, slot: int) -> void:
 	
 	file.store_line(file_title)
 	file.store_64(ds.init_seed)
-	file.store_8(ds.amount_of_stars)
-	file.store_var(ds.map_size)
 	file.store_var(ds.map)
-	file.store_8(ds.sector_size)
-	file.store_8(ds.sector_padding)
-	file.store_16(ds.map_px_size)
-	file.store_var(ds.draw_sector_grid)
 	file.store_var(ds.lanes)
 	file.store_var(ds.astar)
 	
-	for i in ds.amount_of_stars:
+	for i in ds.map.amount_of_stars:
 		var s:Star = ds.StarsFolder.get_child(i)
-		var star_data := [
-			s.name, s.position, s.sector, s.index, # 0-3
-			s.position_importance, # 4
-		]
+		var star_data := {
+			name = s.name,
+			position = s.position,
+			sector = s.sector,
+			index = s.index,
+			centrality = s.centrality,
+		}
 		var adj_stars := []
 		for a in s.adj_stars:
 			adj_stars.append(a.name)
-		star_data.append(adj_stars)
+		star_data.adj_stars = adj_stars
+		
 		file.store_var(star_data)
 
-	var dp = data.Player
-	
-	file.store_8(dp.status)
-	file.store_8(dp.came_from)
-	file.store_8(dp.modal)
-	if dp.origin: file.store_line(dp.origin.name)
-	else: file.store_line("")
-	if dp.destination: file.store_line(dp.destination.name)
-	else: file.store_line("")
-	if dp.location: file.store_line(dp.location.name)
-	else: file.store_line("")
-	file.store_line(dp.location_type)
-	
-	var dt = data.TextLeft
-	
-	file.store_var(dt.get_text())
+	# replace star references with star names for saving
+	var mod_pos = data.Player.pos.duplicate(true)
+	mod_pos.from = mod_pos.from.name if mod_pos.from else null
+	mod_pos.to = mod_pos.to.name if mod_pos.to else null
+	mod_pos.at = mod_pos.at.name if mod_pos.at else null
+
+	file.store_var(data.Player.status)
+	file.store_var(mod_pos)
+	file.store_var(data.TextLeft.get_text())
 	
 	file.close()
 
@@ -117,34 +108,23 @@ func load_game(slot: int) -> Dictionary:
 	
 	var d := {}
 	
-	d.s = {}
+	d.s = {} # data for starmap & stars
 	
 	d.s.init_seed = file.get_64()
-	d.s.amount_of_stars = file.get_8()
-	d.s.map_size = file.get_var()
 	d.s.map = file.get_var()
-	d.s.sector_size = file.get_8()
-	d.s.sector_padding = file.get_8()
-	d.s.map_px_size = file.get_16()
-	d.s.draw_sector_grid = file.get_var()
 	d.s.lanes = file.get_var()
 	d.s.astar = file.get_var()
 	
 	d.s.stars = []
-	for i in d.s.amount_of_stars:
+	for i in d.s.map.amount_of_stars:
 		d.s.stars.append(file.get_var())
 	
-	d.p = {}
+	d.p = {} # data for player
 	
-	d.p.status = file.get_8()
-	d.p.came_from = file.get_8()
-	d.p.modal = file.get_8()
-	d.p.origin_name = file.get_line()
-	d.p.destination_name = file.get_line()
-	d.p.location_name = file.get_line()
-	d.p.location_type = file.get_line()
+	d.p.status = file.get_var()
+	d.p.pos = file.get_var()
 	
-	d.t = {}
+	d.t = {} # data for text
 	
 	d.t.text = file.get_var()
 	

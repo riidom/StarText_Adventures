@@ -4,22 +4,25 @@ extends Node2D
 onready var StarsFolder = $StarsFolder
 
 var init_seed := 0
-var map := [] # becomes 2D array
-var amount_of_stars := 15
+var map := {}
 var lanes := {}
-var astar = AStar2D.new()
-
-var map_size := Vector2(10, 10) # measured in sectors
-var sector_size := 40 # in pixels
-var sector_padding := round(sector_size / 15.0) # dont place stars closer than # px to sector border
-var map_px_size := map_size.x * sector_size
-var draw_sector_grid := false
+var astar = AStar2D.new() # don't assign type here or load will fail
 
 onready var PlayerIndicator = $PlayerIndicator
 var player_on_star_icon = preload("res://Starmap/player_indicator_star.png")
 var player_on_lane_icon = preload("res://Starmap/player_indicator_lane.png")
 onready var DestinationIndicator = $DestinationIndicator
 var destination_icon = preload("res://Starmap/destination_indicator.png")
+
+
+func _ready() -> void:
+	map.sector = [] # becomes 2D array
+	map.amount_of_stars = 15
+	map.size = Vector2(10, 10) # measured in sectors
+	map.sector_size = 40 # in pixels
+	map.sector_padding = round(map.sector_size / 15.0) # dont place stars closer than # px to sector border
+	map.px_size = map.size.x * map.sector_size
+	map.draw_sector_grid = false
 
 
 func custom_ready(data = null) -> void:
@@ -36,31 +39,24 @@ func load_map(d) -> void:
 	NameGen.used = {}
 	init_seed = d.s.init_seed
 	map = d.s.map
-	amount_of_stars = d.s.amount_of_stars
 	lanes = d.s.lanes
-	map_size = d.s.map_size
-	sector_size = d.s.sector_size
-	sector_padding = d.s.sector_padding
-	map_px_size = d.s.map_px_size
-	draw_sector_grid = d.s.draw_sector_grid
 	astar = d.s.astar
 	
 	# first give all star-nodes the correct name
-	for i in amount_of_stars:
+	for i in map.amount_of_stars:
 		var star:Star = StarsFolder.get_child(i)
 		var loaded = d.s.stars[i]
-		star.name = loaded[0]
-		star.position = loaded[1]
-		star.sector = loaded[2]
-		star.index = loaded[3]
-		star.position_importance = loaded[4]
+		star.index = loaded.index
+		star.name = loaded.name
+		star.position = loaded.position
+		star.sector = loaded.sector
+		star.centrality = loaded.centrality
 	
 	# then iterate again to assign adjacent stars, which requires correct star names
-	for i in amount_of_stars:
+	for i in map.amount_of_stars:
 		var star: Star = StarsFolder.get_child(i)
 		star.adj_stars.clear()
-		var loaded_adj: Array = d.s.stars[i][3] # only asking for 4th element (array-in-array of adj. stars)
-		for a in loaded_adj:
+		for a in d.s.stars[i].adj_stars:
 			star.adj_stars.append(get_star_node_by_name(a))
 	
 	update()
@@ -75,18 +71,18 @@ func get_star_node_by_name(name: String):
 func init_map() -> void:
 	NameGen.used = {}
 	lanes = {}
-	self.map = init_map_array(map_size)
+	map.sector = init_map_array(map.size)
 	# instance and place stars
-	for i in amount_of_stars:
+	for i in map.amount_of_stars:
 		while true:
-			var temp_x = randi() % int(map_size.x)
-			var temp_y = randi() % int(map_size.y)
-			if map[temp_x][temp_y]: continue
+			var temp_x = randi() % int(map.size.x)
+			var temp_y = randi() % int(map.size.y)
+			if map.sector[temp_x][temp_y]: continue
 			define_star(i, temp_x, temp_y)
 			break
 	
 	place_lanes()
-	find_chokepoints()
+	calculate_centrality()
 
 
 func init_map_array(size: Vector2) -> Array:
@@ -102,14 +98,14 @@ func define_star(index: int, x: int, y: int) -> void:
 	var star = StarsFolder.get_child(index)
 	star.index = index
 	star.sector = Vector2(x, y)
-	star.set_px_size(round(sector_size / 3.0))
+	star.set_px_size(round(map.sector_size / 3.0))
 	var star_offset = Vector2(
-		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8)),
-		int(rand_range(sector_padding + 8, sector_size - sector_padding - 8))
+		int(rand_range(map.sector_padding + 8, map.sector_size - map.sector_padding - 8)),
+		int(rand_range(map.sector_padding + 8, map.sector_size - map.sector_padding - 8))
 	) # the 8 is half the tilesize of the sun-icon
-	star.position = Vector2(x * sector_size, y * sector_size) + star_offset
+	star.position = Vector2(x * map.sector_size, y * map.sector_size) + star_offset
 	star.name = NameGen.generate_system_name(x, y)
-	map[x][y] = star
+	map.sector[x][y] = star
 	astar.add_point(star.index, star.position)
 
 
@@ -148,28 +144,28 @@ func place_lanes() -> void:
 				add_lane(s1, s2)
 
 
-func find_chokepoints() -> void:
+func calculate_centrality() -> void:
 	for s1 in astar.get_points():
 		for s2 in astar.get_points():
 			if s1 == s2: continue
 			for p in astar.get_id_path(s1, s2):
-				StarsFolder.get_child(p).position_importance += 1
+				StarsFolder.get_child(p).centrality += 1
 	
 	var imp_min:float = INF
 	var imp_max:float = 0.0
 	for s in StarsFolder.get_children():
-		if s.position_importance < imp_min:
-			imp_min = s.position_importance
-		if s.position_importance > imp_max:
-			imp_max = s.position_importance
+		if s.centrality < imp_min:
+			imp_min = s.centrality
+		if s.centrality > imp_max:
+			imp_max = s.centrality
 
 	for s in StarsFolder.get_children():
-		s.position_importance -= imp_min
+		s.centrality -= imp_min
 	imp_max -= imp_min
 	
 	for s in StarsFolder.get_children():
-		s.position_importance /= imp_max
-		s.Icon.self_modulate = s.heat_gradient.interpolate(s.position_importance)
+		s.centrality /= imp_max
+		s.Icon.self_modulate = s.heat_gradient.interpolate(s.centrality)
 
 
 func is_intersecting(s1: Star, s2: Star) -> bool:
@@ -259,15 +255,17 @@ func get_lane(s1: Star, s2: Star) -> Array:
 	
 func _draw() -> void:
 	# draw background stars
-	draw_bg_stars(map_px_size / 2, .25, .25, 1, .5) # small stars
-	draw_bg_stars(map_px_size / 10, .1, .75, 2, .75) # big stars
+	draw_bg_stars(map.px_size / 2, .25, .25, 1, .5) # small stars
+	draw_bg_stars(map.px_size / 10, .1, .75, 2, .75) # big stars
 	
 	# draw sector grid
-	if draw_sector_grid:
-		for x in range(map_size.x):
-			for y in range(map_size.y):
+	if map.draw_sector_grid:
+		for x in range(map.size.x):
+			for y in range(map.size.y):
 				draw_rect(
-					Rect2(Vector2(x * sector_size, y * sector_size), Vector2(sector_size, sector_size)),
+					Rect2(
+						Vector2(x * map.sector_size, y * map.sector_size),
+						Vector2(map.sector_size, map.sector_size)),
 					Color(.25, .25, .25), false, 1.0)
 	
 	# draw lanes
@@ -279,23 +277,23 @@ func draw_bg_stars(amount: float, max_sat: float, min_val: float, size: float, a
 	var bg_star_pos = Vector2.ZERO
 	var bg_star_col = Color(0,0,0, 1)
 	for _i in range(int(amount)):
-		bg_star_pos.x = round(rand_range(0, map_px_size))
-		bg_star_pos.y = round(rand_range(0, map_px_size))
+		bg_star_pos.x = round(rand_range(0, map.px_size))
+		bg_star_pos.y = round(rand_range(0, map.px_size))
 		bg_star_col = Color.from_hsv(randf(), rand_range(0, max_sat), rand_range(min_val, 1), alpha)
 		draw_circle(bg_star_pos, size, bg_star_col)
 
 
 func get_size() -> float:
-	return map_px_size
+	return map.px_size
 
 
 func _on_player_location_updated(player, _silent: bool = false):
-	if player.location_type == "Star":
+	if player.pos.type == "Star":
 		PlayerIndicator.texture = player_on_star_icon
-		PlayerIndicator.position = player.location.position
+		PlayerIndicator.position = player.pos.at.position
 		PlayerIndicator.rotation = 0
-	elif player.location_type == "Lane":
-		var lane = lanes[assemble_lane_name(player.origin.name, player.destination.name)]
+	elif player.pos.type == "Lane":
+		var lane = lanes[assemble_lane_name(player.pos.from.name, player.pos.to.name)]
 		PlayerIndicator.texture = player_on_lane_icon
 		PlayerIndicator.position = lane[0]
 		var angle = lane[1].angle_to_point(lane[2])

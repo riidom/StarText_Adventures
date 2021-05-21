@@ -12,25 +12,25 @@ func _ready() -> void:
 func print_location(player: Player) -> void:
 	var mention_system = tell_system(player)
 	var loc = ""
-	var s_at = player.location.name if player.location else ""
-	var s_from = player.origin.name if player.origin else ""
-	var s_to = player.destination.name if player.destination else ""
+	var s_at = player.pos.at.name if player.pos.at else ""
+	var s_from = player.pos.from.name if player.pos.from else ""
+	var s_to = player.pos.to.name if player.pos.to else ""
 	
-	if player.status == G.IN.STATION:
+	if player.status.current == G.IN.STATION:
 		loc = "station"
 		
-	if player.status == G.IN.SPACE:
-		if player.came_from == G.FROM.STATION:
+	if player.status.current == G.IN.SPACE:
+		if player.status.came_from == G.FROM.STATION:
 			loc = "station->space"
-		elif player.came_from == G.FROM.STARLANE:
+		elif player.status.came_from == G.FROM.STARLANE:
 			loc = "lane->space"
-		elif player.came_from == G.FROM.SPACE:
+		elif player.status.came_from == G.FROM.SPACE:
 			loc = "space->space"
 	
-	if player.status == G.IN.STARLANE:
-		if player.came_from == G.FROM.STARLANE:
+	if player.status.current == G.IN.STARLANE:
+		if player.status.came_from == G.FROM.STARLANE:
 			loc = "lane"
-		elif player.came_from == G.FROM.SPACE:
+		elif player.status.came_from == G.FROM.SPACE:
 			loc = "space->lane"
 	
 	add(T.get("T_location_description",
@@ -38,8 +38,8 @@ func print_location(player: Player) -> void:
 
 
 func tell_system(player: Player) -> bool:
-	return (player.came_from == G.FROM.STARLANE and player.status != G.IN.STARLANE)\
-		or (player.status == G.IN.STATION and player.came_from == G.FROM.GAME_START)
+	return (player.status.came_from == G.FROM.STARLANE and player.status.current != G.IN.STARLANE)\
+		or (player.status.current == G.IN.STATION and player.status.came_from == G.FROM.GAME_START)
 
 
 func add(text: String, linebreaks: int = 1) -> void:
