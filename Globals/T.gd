@@ -62,32 +62,32 @@ func init():
 	prim.de["S_destination_cleared"] = "Kein Ziel gesetzt"
 	prim.en["S_destination_cleared"] = "No destination set"
 	
-	prim.de["I_D_Dock"] = "D - Kontaktiere Station und erbitte Erlaubnis zum Andocken."
-	prim.en["I_D_Dock"] = "D - Contact station and ask for permission to dock."
+	prim.de["I_D_Dock"] = "Kontaktiere Station und erbitte Erlaubnis zum Andocken."
+	prim.en["I_D_Dock"] = "Contact station and ask for permission to dock."
 	
-	prim.de["I_N_Nav"] = "N - Navigationscomputer, wähle auf der Karte ein Ziel aus."
-	prim.en["I_N_Nav"] = "N - Navigation computer, pick a destination from map."
+	prim.de["I_N_Nav"] = "Navigationscomputer, wähle auf der Karte ein Ziel aus."
+	prim.en["I_N_Nav"] = "Navigation computer, pick a destination from map."
 	
 	prim.de["I_Nav_Instructions"] = "Navigationscomputer - Klicke ein benachbartes Sternensystem auf der Karte, um es als Ziel auszuwählen."
 	prim.en["I_Nav_Instructions"] = "Navigation Computer - Click an adjacent star system on the map to pick your next destination."
 	
-	prim.de["I_C_ClearNav"] = "C - Lösche das momentan gespeicherte Navigationsziel."
-	prim.en["I_C_ClearNav"] = "C - Clear current destination."
+	prim.de["I_C_ClearNav"] = "Lösche das momentan gespeicherte Navigationsziel."
+	prim.en["I_C_ClearNav"] = "Clear current destination."
 	
-	prim.de["I_J_Jump"] = "J - Starte den Warpantrieb und springe auf die Sternenbahn."
-	prim.en["I_J_Jump"] = "J - Start the warp engine and enter the starlane."
+	prim.de["I_J_Jump"] = "Starte den Warpantrieb und springe auf die Sternenbahn."
+	prim.en["I_J_Jump"] = "Start the warp engine and enter the starlane."
 
-	prim.de["I_E_Engines"] = "E - Starte den Antrieb und verlasse die Station."
-	prim.en["I_E_Engines"] = "E - Fire up the engines and exit the station."
+	prim.de["I_E_Engines"] = "Starte den Antrieb und verlasse die Station."
+	prim.en["I_E_Engines"] = "Fire up the engines and exit the station."
 
-	prim.de["I_W_Wait"] = "W - Warte, während du noch auf der Sternenbahn reist."
-	prim.en["I_W_Wait"] = "W - Wait while the travel on the starlane continues."
+	prim.de["I_W_Wait"] = "Warte, während du noch auf der Sternenbahn reist."
+	prim.en["I_W_Wait"] = "Wait while the travel on the starlane continues."
 
-	prim.de["I_ESC_Menu"] = "ESC - Hauptmenü"
-	prim.en["I_ESC_Menu"] = "ESC - Main Menu"
+	prim.de["I_ESC_Menu"] = "Hauptmenü"
+	prim.en["I_ESC_Menu"] = "Main Menu"
 
-	prim.de["I_ESC_Cancel"] = "ESC - Abbrechen"
-	prim.en["I_ESC_Cancel"] = "ESC - Cancel"
+	prim.de["I_ESC_Cancel"] = "Abbrechen"
+	prim.en["I_ESC_Cancel"] = "Cancel"
 
 	prim.de["T_Welcome_1"] = "Willkommen an Bord, Käpt'n!"
 	prim.de["T_Welcome_2"] = "Das Schiff ist bereit."
@@ -106,6 +106,8 @@ func init():
 	prim.de["A_only_adjacent"] = "Nur benachbarte Sterne sind gültige Ziele"
 	prim.en["A_only_adjacent"] = "Only adjacent stars are valid destinations."
 
+	prim.de["A_Nav_Instructions"] = "Navigationscomputer - Klicke ein benachbartes Sternensystem auf der Karte, um es als Ziel auszuwählen."
+	prim.en["A_Nav_Instructions"] = "Navigation Computer - Click an adjacent star system on the map to pick your next destination."
 
 func T_location_description(p: Dictionary) -> String:
 	var text = []

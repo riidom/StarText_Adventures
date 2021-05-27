@@ -19,11 +19,19 @@ signal game_loaded(slot)
 signal language_toggled
 
 # warning-ignore:unused_signal
+signal action_triggered(id)
+
+# warning-ignore:unused_signal
 signal player_location_updated(player)
 # warning-ignore:unused_signal
 signal star_clicked(star)
 # warning-ignore:unused_signal
 signal destination_set(star, silent)
+# warning-ignore:unused_signal
+signal nav_started
+# warning-ignore:unused_signal
+signal nav_finished
+
 
 var settings = load_settings()
 

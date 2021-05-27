@@ -7,14 +7,14 @@
 [ext_resource path="res://Player/Player.gd" type="Script" id=5]
 [ext_resource path="res://Main/__GAME__.gd" type="Script" id=6]
 [ext_resource path="res://UI/Statuszeile.gd" type="Script" id=7]
-[ext_resource path="res://UI/TextRight.gd" type="Script" id=8]
 [ext_resource path="res://UI/stylebox_res/Stylebox_Statuszeile.tres" type="StyleBox" id=9]
 [ext_resource path="res://UI/Hinweiszeile.gd" type="Script" id=10]
-[ext_resource path="res://UI/font_res/SG_24px_Light.tres" type="DynamicFont" id=11]
+[ext_resource path="res://UI/font_res/SG_20px_Light.tres" type="DynamicFont" id=11]
 [ext_resource path="res://UI/MainMenu.tscn" type="PackedScene" id=12]
 [ext_resource path="res://UI/icons/ship_in_station.png" type="Texture" id=13]
 [ext_resource path="res://UI/icons/nav_destination.png" type="Texture" id=14]
 [ext_resource path="res://UI/font_res/SG_12px_Normal.tres" type="DynamicFont" id=15]
+[ext_resource path="res://UI/InTextButtonManager.gd" type="Script" id=16]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends HBoxContainer
@@ -104,10 +104,12 @@ margin_left = 34.0
 margin_right = 164.0
 margin_bottom = 30.0
 rect_min_size = Vector2( 130, 0 )
+focus_mode = 0
 custom_fonts/font = ExtResource( 15 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_constants/hseparation = 6
 button_mask = 0
+enabled_focus_mode = 0
 text = "---"
 icon = ExtResource( 14 )
 flat = true
@@ -133,7 +135,7 @@ size_flags_horizontal = 3
 [node name="Hinweiszeile" type="MarginContainer" parent="MainUI/HBox/Map_Status"]
 margin_top = 468.0
 margin_right = 410.0
-margin_bottom = 520.0
+margin_bottom = 514.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
@@ -144,9 +146,10 @@ script = ExtResource( 10 )
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 400.0
-margin_bottom = 42.0
+margin_bottom = 36.0
 custom_fonts/font = ExtResource( 11 )
 custom_colors/font_color = Color( 0.733333, 0.2, 0.2, 1 )
+custom_constants/line_spacing = -6
 autowrap = true
 
 [node name="TextLeft" type="ColorRect" parent="MainUI/HBox"]
@@ -170,7 +173,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Margin" type="MarginContainer" parent="MainUI/HBox/TextLeft/Scroll"]
+[node name="M" type="MarginContainer" parent="MainUI/HBox/TextLeft/Scroll"]
 margin_right = 341.0
 margin_bottom = 574.0
 size_flags_horizontal = 3
@@ -183,11 +186,17 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel" type="RichTextLabel" parent="MainUI/HBox/TextLeft/Scroll/Margin"]
+[node name="VBox" type="VBoxContainer" parent="MainUI/HBox/TextLeft/Scroll/M"]
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 331.0
 margin_bottom = 564.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Text" type="RichTextLabel" parent="MainUI/HBox/TextLeft/Scroll/M/VBox"]
+margin_right = 321.0
+margin_bottom = 550.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_fonts/bold_font = ExtResource( 2 )
@@ -197,6 +206,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Grid" type="GridContainer" parent="MainUI/HBox/TextLeft/Scroll/M/VBox"]
+margin_top = 554.0
+margin_right = 321.0
+margin_bottom = 554.0
+custom_constants/vseparation = 5
+custom_constants/hseparation = 5
+columns = 2
+script = ExtResource( 16 )
+
 [node name="TextRight" type="ColorRect" parent="MainUI/HBox"]
 margin_left = 771.0
 margin_right = 1112.0
@@ -204,7 +222,6 @@ margin_bottom = 574.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 color = Color( 0.133333, 0.133333, 0.133333, 1 )
-script = ExtResource( 8 )
 __meta__ = {
 "_edit_use_anchors_": false
 }

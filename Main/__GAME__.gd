@@ -11,8 +11,8 @@ var StarsArray := []
 onready var Statuszeile = $MainUI/HBox/Map_Status/Statuszeile
 onready var Hinweiszeile = $MainUI/HBox/Map_Status/Hinweiszeile
 
+onready var InTextButtons = $MainUI/HBox/TextLeft/Scroll/M/VBox/Grid
 onready var TextLeft = $MainUI/HBox/TextLeft
-onready var TextRight = $MainUI/HBox/TextRight
 
 onready var Player = $Player
 
@@ -29,9 +29,10 @@ func _ready() -> void:
 	G.connect("game_loaded", self, "_on_game_loaded")
 	G.connect("language_toggled", self, "_on_language_toggled")
 	
+	G.connect("action_triggered", self, "_on_action_triggered")
+	
 	G.connect("player_location_updated", Starmap, "_on_player_location_updated")
 	G.connect("player_location_updated", TextLeft, "_on_player_location_updated")
-	G.connect("player_location_updated", TextRight, "_on_player_location_updated")
 	G.connect("player_location_updated", Statuszeile, "_on_player_location_updated")
 	
 	G.connect("star_clicked", self, "_on_star_clicked")
@@ -39,88 +40,88 @@ func _ready() -> void:
 	G.connect("destination_set", Statuszeile, "_on_destination_set")
 	G.connect("destination_set", TextLeft, "_on_destination_set")
 	
+	G.connect("nav_started", Starmap, "_on_nav_started")
+	G.connect("nav_finished", Starmap, "_on_nav_finished")
+	
 	# hide menu
 	MainMenu.rect_position.x = -MainMenu.rect_size.x * 1.1
 	
 	# load settings and init strings
 	G.load_settings()
-	#T.init()
 	
 	# set player to random star at beginning
 	Player.update_location(StarsArray[randi() % StarsArray.size()])
 	G.emit_signal("player_location_updated", Player)
 	G.emit_signal("destination_set", null, true)
-
-
-func _process(_delta: float) -> void:
-	if Player.status.modal == G.DOING.NO_MODAL:
-		if Player.status.current == G.IN.SPACE:
-			process_in_space()
-		if Player.status.current == G.IN.STARLANE:
-			process_in_lane()
-		if Player.status.current == G.IN.STATION:
-			process_in_station()
 	
-	# ESC-key handling
-	if Input.is_action_just_pressed("ui_cancel"):
+	InTextButtons.update_buttons(Player)
+
+
+func _unhandled_key_input(key: InputEventKey) -> void:
+	if key.pressed and !key.echo and key.scancode == KEY_ESCAPE:
+		
 		if Player.status.modal == G.DOING.NO_MODAL:
 			Player.status.modal = G.DOING.MAIN_MENU
 			G.emit_signal("main_menu_opened")
-		else:
-			if Player.status.modal == G.DOING.NAV:
-				TextRight.general_options(Player)
-			elif Player.status.modal == G.DOING.MAIN_MENU:
-				G.emit_signal("main_menu_closed")
+		
+		elif Player.status.modal == G.DOING.NAV:
 			Player.status.modal = G.DOING.NO_MODAL
-	
-	if Player.status.modal == G.DOING.NAV:
-		if Input.is_action_just_pressed("clear"):
-			Player.pos.to = null
-			G.emit_signal("destination_set", null)
+			G.emit_signal("nav_finished")
+		
+		elif Player.status.modal == G.DOING.MAIN_MENU:
 			Player.status.modal = G.DOING.NO_MODAL
-			TextRight.general_options(Player)
+			G.emit_signal("main_menu_closed")
+		
+		InTextButtons.update_buttons(Player)
 
 
-func process_in_space() -> void:
-	if Input.is_action_just_pressed("dock_station"):
+func _on_action_triggered(meta: String) -> void:
+	if meta == "I_E_Engines":
+		Player.status.current = G.IN.SPACE
+		Player.status.came_from = G.FROM.STATION
+		G.emit_signal("player_location_updated", Player)
+		
+	elif meta == "I_N_Nav":
+		Player.status.modal = G.DOING.NAV
+		G.emit_signal("nav_started")
+		Hinweiszeile.display_message(T.get("A_Nav_Instructions"), true)
+		
+	elif meta == "I_W_Wait":
+		Player.status.current = G.IN.SPACE
+		Player.status.came_from = G.FROM.STARLANE
+		Player.update_location(Player.pos.to)
+		G.emit_signal("destination_set", null, true)
+		G.emit_signal("player_location_updated", Player)
+		
+	elif meta == "I_D_Dock":
 		Player.status.current = G.IN.STATION
 		Player.status.came_from = G.FROM.SPACE
 		G.emit_signal("player_location_updated", Player)
-		TextRight.general_options(Player)
-	
-	if Input.is_action_just_pressed("jump_starlane"):
+		
+	elif meta == "I_J_Jump":
 		Player.status.current = G.IN.STARLANE
 		Player.status.came_from = G.FROM.SPACE
 		Player.update_location(Player.pos.at, Player.pos.to)
 		G.emit_signal("player_location_updated", Player)
-		TextRight.general_options(Player)
 		
-	if Input.is_action_just_pressed("navigation"):
-		Player.status.modal = G.DOING.NAV
-		TextRight.nav_options(Player)
-
-
-func process_in_lane() -> void:
-	if Input.is_action_just_pressed("continue_travel"):
-		Player.status.current = G.IN.SPACE
-		Player.status.came_from = G.FROM.STARLANE
-		Player.update_location(Player.pos.to)
-#		Player.pos.to = null
-		G.emit_signal("destination_set", null, true)
-		G.emit_signal("player_location_updated", Player)
-		TextRight.general_options(Player)
-
-
-func process_in_station() -> void:
-	if Input.is_action_just_pressed("navigation"):
-		Player.status.modal = G.DOING.NAV
-		TextRight.nav_options(Player)
+	elif meta == "I_C_ClearNav":
+		Player.pos.to = null
+		G.emit_signal("destination_set", null)
+		G.emit_signal("nav_finished")
+		Player.status.modal = G.DOING.NO_MODAL
 	
-	if Input.is_action_just_pressed("exit_station"):
-		Player.status.current = G.IN.SPACE
-		Player.status.came_from = G.FROM.STATION
-		G.emit_signal("player_location_updated", Player)
-		TextRight.general_options(Player)
+	elif meta == "I_ESC_Menu":
+		Player.status.modal = G.DOING.MAIN_MENU
+		G.emit_signal("main_menu_opened")
+	
+	elif meta == "I_ESC_Cancel":
+		if Player.status.modal == G.DOING.NAV:
+			Player.status.modal = G.DOING.NO_MODAL
+			G.emit_signal("nav_finished")
+		else:
+			push_error("_on_action_triggered(), meta==\"I_ESC_Cancel\": neuen Modal vergessen?")
+	
+	InTextButtons.update_buttons(Player)
 
 
 func _on_star_clicked(star: Star) -> void:
@@ -136,14 +137,16 @@ func _on_star_clicked(star: Star) -> void:
 			if star == adj:
 				Player.pos.to = star
 				Player.status.modal = G.DOING.NO_MODAL
-				TextRight.general_options(Player)
 				G.emit_signal("destination_set", star)
+				G.emit_signal("nav_finished")
+				InTextButtons.update_buttons(Player)
 				return
 		Hinweiszeile.display_message(T.get("A_only_adjacent"))
 
 
 func _on_main_menu_closed() -> void:
 	Player.status.modal = G.DOING.NO_MODAL
+	InTextButtons.update_buttons(Player)
 
 
 func _on_game_saved(slot: int) -> void:

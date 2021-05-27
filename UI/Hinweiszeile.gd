@@ -4,7 +4,7 @@ onready var Label = $Label
 
 
 var time := 0.0
-var duration := 2.0
+var duration := 3.0
 
 
 func _process(delta: float) -> void:
@@ -17,7 +17,7 @@ func _process(delta: float) -> void:
 	))
 
 	
-func display_message(text: String) -> void:
+func display_message(text: String, slow: bool = false) -> void:
 	Label.text = text
 	time = 0
-
+	duration = 3.0 if !slow else 6.0

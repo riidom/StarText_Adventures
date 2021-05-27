@@ -1,7 +1,7 @@
 extends ColorRect
 
 
-onready var Label = $Scroll/Margin/RichTextLabel
+onready var Label = $Scroll/M/VBox/Text
 
 
 func _ready() -> void:
