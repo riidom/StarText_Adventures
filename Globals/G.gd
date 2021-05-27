@@ -28,7 +28,7 @@ signal star_clicked(star)
 # warning-ignore:unused_signal
 signal destination_set(star, silent)
 # warning-ignore:unused_signal
-signal nav_started
+signal nav_started(player)
 # warning-ignore:unused_signal
 signal nav_finished
 

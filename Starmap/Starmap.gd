@@ -308,11 +308,3 @@ func _on_destination_set(star: Star, _silent: bool = false) -> void:
 	DestinationIndicator.position = star.position
 	
 
-func _on_nav_started() -> void:
-	map.draw_sector_grid = true
-	update()
-
-
-func _on_nav_finished() -> void:
-	map.draw_sector_grid = false
-	update()

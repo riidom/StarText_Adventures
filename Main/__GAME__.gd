@@ -8,6 +8,8 @@ var Star = preload("res://Starmap/Star.tscn")
 onready var StarsFolder = $MainUI/HBox/Map_Status/StarMapContainer/Starmap/StarsFolder
 var StarsArray := []
 
+onready var MapHighlighter = $MainUI/HBox/Map_Status/StarMapContainer/MapHighlighter
+
 onready var Statuszeile = $MainUI/HBox/Map_Status/Statuszeile
 onready var Hinweiszeile = $MainUI/HBox/Map_Status/Hinweiszeile
 
@@ -40,8 +42,8 @@ func _ready() -> void:
 	G.connect("destination_set", Statuszeile, "_on_destination_set")
 	G.connect("destination_set", TextLeft, "_on_destination_set")
 	
-	G.connect("nav_started", Starmap, "_on_nav_started")
-	G.connect("nav_finished", Starmap, "_on_nav_finished")
+	G.connect("nav_started", self, "_on_nav_started")
+	G.connect("nav_finished", self, "_on_nav_finished")
 	
 	# hide menu
 	MainMenu.rect_position.x = -MainMenu.rect_size.x * 1.1
@@ -143,7 +145,11 @@ func _on_star_clicked(star: Star) -> void:
 				return
 		Hinweiszeile.display_message(T.get("A_only_adjacent"))
 
-
+func _on_nav_started() -> void:
+	MapHighlighter.visible = true
+func _on_nav_finished() -> void:
+	MapHighlighter.visible = false
+	
 func _on_main_menu_closed() -> void:
 	Player.status.modal = G.DOING.NO_MODAL
 	InTextButtons.update_buttons(Player)
