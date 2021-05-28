@@ -43,6 +43,7 @@ func _ready() -> void:
 	G.connect("destination_set", TextLeft, "_on_destination_set")
 	
 	G.connect("nav_started", self, "_on_nav_started")
+	G.connect("nav_started", Hinweiszeile, "_on_nav_started")
 	G.connect("nav_finished", self, "_on_nav_finished")
 	
 	# hide menu
@@ -86,7 +87,7 @@ func _on_action_triggered(meta: String) -> void:
 	elif meta == "I_N_Nav":
 		Player.status.modal = G.DOING.NAV
 		G.emit_signal("nav_started")
-		Hinweiszeile.display_message(T.get("A_Nav_Instructions"), true)
+#		Hinweiszeile.display_message(T.get("A_Nav_Instructions"), true)
 		
 	elif meta == "I_W_Wait":
 		Player.status.current = G.IN.SPACE
