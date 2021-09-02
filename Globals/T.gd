@@ -1,5 +1,6 @@
 extends Node
 
+
 var lang = G.settings.lang
 var prim := {} # primitive, static phrases that can be simply translated
 
@@ -23,6 +24,8 @@ func get(id: String, params: Dictionary = {}) -> String:
 #  I : Instructions (key - action)
 #  S : Status texts
 #  A : Alerts (red flashing text)
+
+#  D : Dialogs (not defined here, but in each dialog's resource)
 
 
 func init():

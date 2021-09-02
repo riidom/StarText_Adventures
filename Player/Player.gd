@@ -4,6 +4,8 @@ class_name Player
 
 var status = {}
 var pos := {}
+var dialog_type := ""
+var dialog_current_step := ""
 
 
 func _ready() -> void:

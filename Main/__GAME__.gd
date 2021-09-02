@@ -49,7 +49,7 @@ func _ready() -> void:
 	# hide menu
 	MainMenu.rect_position.x = -MainMenu.rect_size.x * 1.1
 	
-	# load settings and init strings
+	# various loads and inits
 	G.load_settings()
 	
 	# set player to random star at beginning
@@ -58,7 +58,7 @@ func _ready() -> void:
 	G.emit_signal("destination_set", null, true)
 	
 	InTextButtons.update_buttons(Player)
-
+	
 
 func _unhandled_key_input(key: InputEventKey) -> void:
 	if key.pressed and !key.echo and key.scancode == KEY_ESCAPE:
@@ -79,6 +79,8 @@ func _unhandled_key_input(key: InputEventKey) -> void:
 
 
 func _on_action_triggered(meta: String) -> void:
+	print("in main_game: %s" % meta)
+	
 	if meta == "I_E_Engines":
 		Player.status.current = G.IN.SPACE
 		Player.status.came_from = G.FROM.STATION
@@ -87,7 +89,6 @@ func _on_action_triggered(meta: String) -> void:
 	elif meta == "I_N_Nav":
 		Player.status.modal = G.DOING.NAV
 		G.emit_signal("nav_started")
-#		Hinweiszeile.display_message(T.get("A_Nav_Instructions"), true)
 		
 	elif meta == "I_W_Wait":
 		Player.status.current = G.IN.SPACE
@@ -97,9 +98,13 @@ func _on_action_triggered(meta: String) -> void:
 		G.emit_signal("player_location_updated", Player)
 		
 	elif meta == "I_D_Dock":
-		Player.status.current = G.IN.STATION
-		Player.status.came_from = G.FROM.SPACE
-		G.emit_signal("player_location_updated", Player)
+#		Player.status.current = G.IN.STATION
+#		Player.status.came_from = G.FROM.SPACE
+#		G.emit_signal("player_location_updated", Player)
+		Player.status.modal = G.DOING.IN_DIALOG
+		Player.dialog_type = "DockingStation"
+		Dialogs[Player.dialog_type].init(Player.pos.at.name)
+		G.emit_signal("action_triggered", "D_entry")
 		
 	elif meta == "I_J_Jump":
 		Player.status.current = G.IN.STARLANE
@@ -109,9 +114,9 @@ func _on_action_triggered(meta: String) -> void:
 		
 	elif meta == "I_C_ClearNav":
 		Player.pos.to = null
+		Player.status.modal = G.DOING.NO_MODAL
 		G.emit_signal("destination_set", null)
 		G.emit_signal("nav_finished")
-		Player.status.modal = G.DOING.NO_MODAL
 	
 	elif meta == "I_ESC_Menu":
 		Player.status.modal = G.DOING.MAIN_MENU
@@ -123,6 +128,11 @@ func _on_action_triggered(meta: String) -> void:
 			G.emit_signal("nav_finished")
 		else:
 			push_error("_on_action_triggered(), meta==\"I_ESC_Cancel\": neuen Modal vergessen?")
+	
+	elif meta.begins_with("D_"):
+		TextLeft.print_dialog(Player, meta)
+		Dialogs[Player.dialog_type].eval_step(meta)
+		Player.dialog_current_step = meta
 	
 	InTextButtons.update_buttons(Player)
 
@@ -146,10 +156,14 @@ func _on_star_clicked(star: Star) -> void:
 				return
 		Hinweiszeile.display_message(T.get("A_only_adjacent"))
 
+
 func _on_nav_started() -> void:
 	MapHighlighter.visible = true
+	
+	
 func _on_nav_finished() -> void:
 	MapHighlighter.visible = false
+
 	
 func _on_main_menu_closed() -> void:
 	Player.status.modal = G.DOING.NO_MODAL

@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Starmap/Starmap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://UI/font_res/SG_14px_Bold.tres" type="DynamicFont" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://Player/Player.gd" type="Script" id=5]
 [ext_resource path="res://Main/__GAME__.gd" type="Script" id=6]
 [ext_resource path="res://UI/Statuszeile.gd" type="Script" id=7]
+[ext_resource path="res://UI/font_res/LT_Italic_14px_Normal.tres" type="DynamicFont" id=8]
 [ext_resource path="res://UI/stylebox_res/Stylebox_Statuszeile.tres" type="StyleBox" id=9]
 [ext_resource path="res://UI/Hinweiszeile.gd" type="Script" id=10]
 [ext_resource path="res://UI/font_res/SG_20px_Light.tres" type="DynamicFont" id=11]
@@ -15,6 +16,7 @@
 [ext_resource path="res://UI/icons/nav_destination.png" type="Texture" id=14]
 [ext_resource path="res://UI/font_res/SG_12px_Normal.tres" type="DynamicFont" id=15]
 [ext_resource path="res://UI/InTextButtonManager.gd" type="Script" id=16]
+[ext_resource path="res://UI/font_res/LT_Italic_14px_Bold.tres" type="DynamicFont" id=17]
 
 [sub_resource type="GDScript" id=1]
 script/source = "extends HBoxContainer
@@ -135,10 +137,8 @@ size_flags_horizontal = 3
 [node name="MapHighlighter" type="ColorRect" parent="MainUI/HBox/Map_Status/StarMapContainer"]
 visible = false
 modulate = Color( 1, 0.803922, 0.803922, 0.12549 )
-margin_left = -1.0
-margin_top = -1.0
-margin_right = 409.0
-margin_bottom = 409.0
+margin_right = 410.0
+margin_bottom = 410.0
 rect_min_size = Vector2( 410, 410 )
 mouse_filter = 2
 __meta__ = {
@@ -212,8 +212,11 @@ margin_right = 321.0
 margin_bottom = 550.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+custom_fonts/bold_italics_font = ExtResource( 17 )
+custom_fonts/italics_font = ExtResource( 8 )
 custom_fonts/bold_font = ExtResource( 2 )
 custom_fonts/normal_font = ExtResource( 3 )
+bbcode_enabled = true
 scroll_following = true
 __meta__ = {
 "_edit_use_anchors_": false
@@ -223,9 +226,8 @@ __meta__ = {
 margin_top = 554.0
 margin_right = 321.0
 margin_bottom = 554.0
-custom_constants/vseparation = 5
+custom_constants/vseparation = 10
 custom_constants/hseparation = 5
-columns = 2
 script = ExtResource( 16 )
 
 [node name="TextRight" type="ColorRect" parent="MainUI/HBox"]

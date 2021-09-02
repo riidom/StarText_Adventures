@@ -7,7 +7,7 @@
 
 [node name="InTextButton" type="RichTextLabel"]
 margin_right = 160.0
-margin_bottom = 29.0
+margin_bottom = 21.0
 size_flags_horizontal = 3
 custom_styles/normal = ExtResource( 3 )
 custom_fonts/mono_font = ExtResource( 1 )

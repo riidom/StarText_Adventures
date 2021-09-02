@@ -3,7 +3,7 @@ extends Node
 
 enum IN {STATION, SPACE, STARLANE}
 enum FROM { GAME_START, STATION, STARLANE, SPACE}
-enum DOING { NO_MODAL, NAV, MAIN_MENU}
+enum DOING { NO_MODAL, NAV, MAIN_MENU, IN_DIALOG}
 
 
 # warning-ignore:unused_signal

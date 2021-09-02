@@ -34,6 +34,7 @@ run/main_scene="res://Main/__GAME__.tscn"
 G="*res://Globals/G.gd"
 NameGen="*res://Globals/NameGen.gd"
 T="*res://Globals/T.gd"
+Dialogs="*res://Globals/Dialogs.gd"
 
 [debug]
 

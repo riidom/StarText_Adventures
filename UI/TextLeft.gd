@@ -42,12 +42,25 @@ func tell_system(player: Player) -> bool:
 		or (player.status.current == G.IN.STATION and player.status.came_from == G.FROM.GAME_START)
 
 
+func print_dialog(player: Player, meta: String) -> void:
+	var id = player.dialog_type
+	var text_section = Dialogs[id].story[meta]
+	if !text_section.has("echo"):
+		pass
+	elif text_section.echo == "~":
+		add("[i]%s[/i]" % Dialogs[id].story[meta].button, 2)
+	else:
+		add("[i]%s[/i]" % Dialogs[id].story[meta].echo, 2)
+		
+	add(Dialogs[id].story[meta].reaction, 2)
+
+
 func add(text: String, linebreaks: int = 1) -> void:
 # Two linebreaks for a blank line (end the paragraph)
 # in the long run we want to keep just the last n entries (with array, or smth else?)
-	Label.text += text
+	Label.append_bbcode(text)
 	for _i in range(linebreaks):
-		Label.text += "\n"
+		Label.append_bbcode("\n")
 
 
 func get_text() -> String:
@@ -57,7 +70,7 @@ func get_text() -> String:
 
 func replace_text(t: String) -> void:
 	# for loading data
-	Label.text = t
+	Label.bbcode_text = t
 
 
 func _on_player_location_updated(player: Player, silent: bool = false) -> void:
